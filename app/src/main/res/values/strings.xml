@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">ZhiHu_Daily</string>
+    <string name="app_name">知乎日报</string>
+    <string name="title_activity_welcome">WelcomeActivity</string>
 </resources>
