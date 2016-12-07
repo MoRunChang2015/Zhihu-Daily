@@ -1,6 +1,6 @@
 # 声明
 
-以下所有 API 均由 __知乎（Zhihu.Inc）__ 提供，本人（Izzy Leung）采取非正常手段获取。获取与共享之行为或有侵犯知乎权益的嫌疑。若被告知需停止共享与使用，本人会及时删除此页面与整个项目。
+以下所有 API 均由 __知乎（Zhihu.Inc）__ 提供，本人（Xiao Liang）采取非正常手段获取。获取与共享之行为或有侵犯知乎权益的嫌疑。若被告知需停止共享与使用，本人会及时删除此页面与整个项目。  
 请您暸解相关情况，并遵守知乎协议。
 
 # API 说明
@@ -15,20 +15,15 @@
 # API 分析
 
 ### 1. 启动界面图像获取
-* URL: `http://news-at.zhihu.com/api/4/start-image/1080*1776`
-* `start-image` 后为图像分辨率，接受如下格式
-
-    * `320*432`
-    * `480*728`
-    * `720*1184`
-    * `1080*1776`
+* URL: `http://news-at.zhihu.com/api/4/start-image/1080*1776`  
+* `start-image` 后为图像分辨率，接受任意的 `number*number` 格式， `number` 为任意非负整数，返回值均相同。  
 
 * 响应实例：
 
         {
-            text: "? Fido Dido",
+            text: "© Fido Dido",
             img: "http://p2.zhimg.com/10/7b/107bb4894b46d75a892da6fa80ef504a.jpg"
-        }
+        }  
 
 * 分析：
     * `text` : 供显示的图片版权信息
@@ -39,7 +34,7 @@
 * Android: `http://news-at.zhihu.com/api/4/version/android/2.3.0`
 * iOS: `http://news-at.zhihu.com/api/4/version/ios/2.3.0`
 * URL 最后部分的数字代表所安装『知乎日报』的版本
-* 响应实例：
+* 响应实例：  
 
     软件为最新版本时
 
@@ -63,7 +58,7 @@
 
 
 ### 3. 最新消息
-* URL: `http://news-at.zhihu.com/api/4/news/latest`
+* URL: `http://news-at.zhihu.com/api/4/news/latest`  
 * 响应实例：
 
         {
@@ -101,11 +96,11 @@
         * `type` : 作用未知
         * `id` : `url` 与 `share_url` 中最后的数字（应为内容的 id）
         * `multipic` : 消息是否包含多张图片（仅出现在包含多图的新闻中）
-    * `top_stories` : 界面顶部 ViewPager 滚动显示的显示内容（子项格式同上）
+    * `top_stories` : 界面顶部 ViewPager 滚动显示的显示内容（子项格式同上）（请注意区分此处的 `image` 属性与 `stories` 中的 `images` 属性）
 
 
 ### 4. 消息内容获取与离线下载
-* URL: `http://news-at.zhihu.com/api/4/news/3892357`
+* URL: `http://news-at.zhihu.com/api/4/news/3892357`  
 * 使用在 `最新消息` 中获得的 `id`，拼接在 `http://news-at.zhihu.com/api/4/news/` 后，得到对应消息 JSON 格式的内容
 * 响应实例：
 
@@ -154,8 +149,8 @@
     * `css` : 供手机端的 WebView(UIWebView) 使用
         * 可知，知乎日报的文章浏览界面利用 WebView(UIWebView) 实现
 
-* __特别注意__
-    在较为特殊的情况下，知乎日报可能将某个主题日报的站外文章推送至知乎日报首页。
+* __特别注意__  
+    在较为特殊的情况下，知乎日报可能将某个主题日报的站外文章推送至知乎日报首页。  
     响应实例：
 
         {
@@ -173,14 +168,14 @@
             ]
         }
 
-    此时返回的 JSON 数据缺少 `body`，`iamge-source`，`image`，`js` 属性。多出 `theme_name`，`editor_name`，`theme_id` 三个属性。`type` 由 `0` 变为 `1`。
+    此时返回的 JSON 数据缺少 `body`，`image-source`，`image`，`js` 属性。多出 `theme_name`，`editor_name`，`theme_id` 三个属性。`type` 由 `0` 变为 `1`。
 
 
 ### 5. 过往消息
-* URL: `http://news.at.zhihu.com/api/4/news/before/20131119`
-* __若果需要查询 11 月 18 日的消息，__`before` __后的数字应为__ `20131119`
-* __知乎日报的生日为 2013 年 5 月 19 日，若__ `before` __后数字小于__ `20130520` __，只会接收到空消息__
-* 输入的今日之后的日期仍然获得今日内容，但是格式不同于最新消息的 JSON 格式
+* URL: `http://news-at.zhihu.com/api/4/news/before/20131119`  
+* __若果需要查询 11 月 18 日的消息，__`before` __后的数字应为__ `20131119`  
+* __知乎日报的生日为 2013 年 5 月 19 日，若__ `before` __后数字小于__ `20130520` __，只会接收到空消息__  
+* 输入的今日之后的日期仍然获得今日内容，但是格式不同于最新消息的 JSON 格式  
 * 响应实例：
 
         {
@@ -203,7 +198,7 @@
 
 
 ### 6. 新闻额外信息
-* URL: `http://news-at.zhihu.com/api/4/story-extra/#{id}`
+* URL: `http://news-at.zhihu.com/api/4/story-extra/#{id}`  
 * 输入新闻的ID，获取对应新闻的额外信息，如评论数量，所获的『赞』的数量。
 * 响应实例：
 
@@ -222,19 +217,25 @@
 
 
 ### 7. 新闻对应长评论查看
-* URL: `http://news-at.zhihu.com/api/4/story/4232852/long-comments`
+* URL: `http://news-at.zhihu.com/api/4/story/8997528/long-comments`
 * 使用在 `最新消息` 中获得的 `id`，在 `http://news-at.zhihu.com/api/4/story/#{id}/long-comments` 中将 `id` 替换为对应的 `id`，得到长评论 JSON 格式的内容
 * 响应实例：
 
         {
             "comments": [
                 {
-                    "author": "EleganceWorld",
-                    "id": 545442,
-                    "content": "上海到济南，无尽的猪排盖饭… （后略）",
-                    "likes": 0,
-                    "time": 1413589303,
-                    "avatar": "http://pic2.zhimg.com/1f76e6a25_im.jpg"
+                     "author":"巨型黑娃儿",
+                     "content":"也不算逻辑问题。其实小时候刚刚听说这个玩意的时候我也奇...",
+                     "avatar":"http://pic3.zhimg.com/4131a3385c748c9e2d02ab80e29a0c52_im.jpg",
+                     "time":1479706360,
+                     "reply_to":{
+                                 "content":"第二个机灵抖的还是有逻辑问题，不该说忘了，应该说没喝过啊我也不知道",
+                                 "status":0,
+                                 "id":27275308,
+                                 "author":"2233155495"
+                                 },
+                     "id":27276057,
+                     "likes":2
                 },
                 ...
             ]
@@ -243,11 +244,17 @@
 * 分析：
     * `comments` : 长评论列表，形式为数组（请注意，其长度可能为 0）
         * `author` : 评论作者
-        * `id` : 评论者的唯一标识符
         * `content` : 评论的内容
+        * `avatar` : 用户头像图片的地址
+        * `id` : 评论者的唯一标识符
         * `likes` : 评论所获『赞』的数量
         * `time` : 评论时间
-        * `avatar` : 用户头像图片的地址
+        * `reply_to` : 所回复的消息
+            * `content` : 原消息的内容
+            * `status` : 消息状态，0为正常，非0为已被删除
+            * `id` : 被回复者的唯一标识符
+            * `author` : 被回复者
+            * `err_msg`: 错误消息，仅当`status`非0时出现
 
 
 ### 8. 新闻对应短评论查看
@@ -358,7 +365,7 @@
 
 ### 11. 热门消息
 * __请注意！__ 此 API 仍可访问，但是其内容未出现在最新的『知乎日报』 App 中。
-* URL: `http://news-at.zhihu.com/api/3/news/hot`
+* URL: `http://news-at.zhihu.com/api/3/news/hot`  
 * 响应实例：
 
         {
@@ -379,13 +386,13 @@
 
 ### 12. 软件推广
 * __请注意！__ 此 API 已无法访问，但是其内容曾出现于『知乎日报』 App 中。
-* Android: `http://news-at.zhihu.com/api/3/promotion/android`
+* Android: `http://news-at.zhihu.com/api/3/promotion/android`  
 * iOS: `http://news-at.zhihu.com/api/3/promotion/ios`
 
 
 ### 13. 栏目总览
 * __请注意！__ 此 API 仍可访问，但是其内容未出现在最新的『知乎日报』 App 中。
-* URL: `http://news-at.zhihu.com/api/3/sections`
+* URL: `http://news-at.zhihu.com/api/3/sections`  
 * 响应实例：
 
         {
@@ -423,3 +430,46 @@
 
 * 往前：`http://news-at.zhihu.com/api/3/section/1/before/1398780001`
     * 在 URL 最后加上一个时间戳，时间戳详见 JSON 数据末端的 `timestamp` 属性
+
+
+
+###15. 查看新闻的推荐者
+* URL: `http://news-at.zhihu.com/api/4/story/#{id}/recommenders`
+* 将新闻id填入到#{id}的位置， 如 `http://news-at.zhihu.com/api/4/story/7101963/recommenders`
+* 响应实例
+
+        {
+            "items": [],
+        	"editors": [{
+        		"bio": "树上的女爵",
+        		"title": "主编",
+        		"id": 79,
+        		"avatar": "http:\/\/pic1.zhimg.com\/0a6456810_m.jpg",
+        		"name": "刘柯"
+        	}],
+        	"item_count": 1
+        }
+
+###16. 获取某个专栏之前的新闻
+* URL: `http://news-at.zhihu.com/api/4/section/#{section id}/before/#{timestamp}`
+* 将专栏id填入到 #{section id}, 将时间戳填入到#{timestamp}，如 `http://news-at.zhihu.com/api/4/section/34/before/1465772400`
+* 注：新闻id要是属于该专栏，否则，返回结果为空
+* 响应实例：
+
+        {
+            "stories": [
+                {
+                    "images": [
+                        "http://pic2.zhimg.com/27f3d8f4c1e0000d04ee446a2f020cf1_t.jpg"
+                     ],
+                    "type": 2,
+                    "id": 7119477,
+                    "title": "9 张本周最热节操图，诺一就是人生赢家本人"
+                }, ...
+            ]
+        }
+
+###17. 查看 Editor 的主页
+* iOS: `http://news-at.zhihu.com/api/4/editor/#{id}/profile-page/ios`
+* Android: `http://news-at.zhihu.com/api/4/editor/#{id}/profile-page/android`
+* 如 http://news-at.zhihu.com/api/4/editor/79/profile-page/ios
