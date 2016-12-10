@@ -15,11 +15,17 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONObject;
 
+import java.util.List;
+
 import cn.zhihu.daily.zhihu_daily.R;
 import cn.zhihu.daily.zhihu_daily.base.BaseActivity;
 import cn.zhihu.daily.zhihu_daily.constant.Constant;
 import cn.zhihu.daily.zhihu_daily.model.DailyNews;
+import cn.zhihu.daily.zhihu_daily.model.Detail;
 import cn.zhihu.daily.zhihu_daily.model.Summary;
+import cn.zhihu.daily.zhihu_daily.model.Theme;
+import cn.zhihu.daily.zhihu_daily.model.ThemeList;
+import cn.zhihu.daily.zhihu_daily.model.ThemeNews;
 import cn.zhihu.daily.zhihu_daily.service.NewsService;
 import cn.zhihu.daily.zhihu_daily.util.NetworkUtil;
 import cz.msebera.android.httpclient.Header;
@@ -31,7 +37,7 @@ public class MainActivity extends BaseActivity {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
             newsService = ((NewsService.MyBinder)iBinder).getService();
-            newsService.downloadDailyNews(handler);
+            newsService.getDailyNews(handler);
         }
 
         @Override
@@ -48,6 +54,24 @@ public class MainActivity extends BaseActivity {
                 case Constant.DOWNLOAD_LATEST_NEWS_SUCCESS:
                     DailyNews dailyNews = (DailyNews)message.obj;
                     Toast.makeText(MainActivity.this, "Download Daily News Success!", Toast.LENGTH_SHORT).show();
+                    break;
+                case Constant.DOWNLOAD_NEWS_DETAIL_SUCCESS:
+                    Detail detail = (Detail)message.obj;
+                    Toast.makeText(MainActivity.this, "Donwload News Detail Success", Toast.LENGTH_SHORT).show();
+                    break;
+
+                case Constant.DOWNLOAD_BEFORE_NEWS_SUCCESS:
+                    DailyNews beforeNews = (DailyNews)message.obj;
+                    Toast.makeText(MainActivity.this, "Download Before News Success!", Toast.LENGTH_SHORT).show();
+                    break;
+                case Constant.DOWNLOAD_THEME_LIST_SUCCESS:
+                    ThemeList themeList = (ThemeList)message.obj;
+                    Toast.makeText(MainActivity.this, "Download Theme List Success!", Toast.LENGTH_SHORT).show();
+                    break;
+                case Constant.DOWNLOAD_THEME_NEWS_SUCCESS:
+                    ThemeNews themeNews = (ThemeNews)message.obj;
+                    Log.d(tag, themeNews.getDescription());
+                    Toast.makeText(MainActivity.this, "Download Theme News Success!", Toast.LENGTH_SHORT).show();
                     break;
                 case Constant.NETWORK_ERROR:
                     Toast.makeText(MainActivity.this, "Network Error", Toast.LENGTH_SHORT).show();

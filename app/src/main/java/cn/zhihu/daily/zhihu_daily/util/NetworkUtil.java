@@ -29,6 +29,10 @@ public class NetworkUtil {
         httpClient.get(url, responseHandler);
     }
 
+    private static void get(String url, JsonHttpResponseHandler responseHandler) {
+        httpClient.get(url, responseHandler);
+    }
+
     private static void get(String url, RequestParams params, TextHttpResponseHandler responseHandler) {
         httpClient.get(url, params, responseHandler);
     }
@@ -47,7 +51,7 @@ public class NetworkUtil {
         return false;
     }
 
-    public static void getStartImageUrl(TextHttpResponseHandler handler) {
+    public static void getStartImageUrl(JsonHttpResponseHandler handler) {
         NetworkUtil.get(Constant.StartImageUrl, handler);
     }
 

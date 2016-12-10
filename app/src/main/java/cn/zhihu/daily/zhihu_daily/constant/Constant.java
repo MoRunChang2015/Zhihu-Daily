@@ -23,4 +23,12 @@ public interface Constant {
     int NETWORK_ERROR = -1;
 
     int DOWNLOAD_LATEST_NEWS_SUCCESS = 1;
+
+    int DOWNLOAD_NEWS_DETAIL_SUCCESS = 2;
+
+    int DOWNLOAD_BEFORE_NEWS_SUCCESS = 3;
+
+    int DOWNLOAD_THEME_LIST_SUCCESS = 4;
+
+    int DOWNLOAD_THEME_NEWS_SUCCESS = 5;
 }
