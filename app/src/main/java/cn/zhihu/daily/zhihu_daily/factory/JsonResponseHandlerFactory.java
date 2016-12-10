@@ -6,11 +6,6 @@ import android.os.Message;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
 import com.loopj.android.http.TextHttpResponseHandler;
-
-import javax.xml.transform.Templates;
-
-import cn.zhihu.daily.zhihu_daily.constant.Constant;
-import cn.zhihu.daily.zhihu_daily.model.Detail;
 import cz.msebera.android.httpclient.Header;
 
 /**

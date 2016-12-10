@@ -7,6 +7,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.BinaryHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
@@ -30,6 +31,10 @@ public class NetworkUtil {
     }
 
     private static void get(String url, JsonHttpResponseHandler responseHandler) {
+        httpClient.get(url, responseHandler);
+    }
+
+    private static void get(String url, BinaryHttpResponseHandler responseHandler) {
         httpClient.get(url, responseHandler);
     }
 
