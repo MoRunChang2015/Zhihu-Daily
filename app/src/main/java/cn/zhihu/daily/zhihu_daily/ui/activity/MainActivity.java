@@ -1,6 +1,7 @@
 package cn.zhihu.daily.zhihu_daily.ui.activity;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.ViewPager;
@@ -14,18 +15,38 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import java.util.ArrayList;
+import android.content.ComponentName;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.Message;
+import android.util.Log;
+
 import java.util.List;
 
 import cn.zhihu.daily.zhihu_daily.R;
 import cn.zhihu.daily.zhihu_daily.adapter.TopStoryAdapter;
 import cn.zhihu.daily.zhihu_daily.base.BaseActivity;
+import cn.zhihu.daily.zhihu_daily.constant.Constant;
+import cn.zhihu.daily.zhihu_daily.model.DailyNews;
+import cn.zhihu.daily.zhihu_daily.model.Detail;
+import cn.zhihu.daily.zhihu_daily.model.ThemeList;
+import cn.zhihu.daily.zhihu_daily.model.ThemeNews;
+import cn.zhihu.daily.zhihu_daily.service.NewsService;
+import cn.zhihu.daily.zhihu_daily.util.CommonUtil;
+import cn.zhihu.daily.zhihu_daily.util.NetworkUtil;
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    CommonUtil commonUtil;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        commonUtil = new CommonUtil(findViewById(R.id.fab));
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -49,6 +70,57 @@ public class MainActivity extends BaseActivity
         navigationView.setNavigationItemSelectedListener(this);
     }
 
+    final String tag = "MainActivity";
+    private NewsService newsService;
+    private ServiceConnection sc =  new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            newsService = ((NewsService.MyBinder)iBinder).getService();
+            newsService.getDailyNews(handler);
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            newsService = null;
+        }
+    };
+
+    Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message message) {
+            super.handleMessage(message);
+            switch (message.what) {
+                case Constant.DOWNLOAD_LATEST_NEWS_SUCCESS:
+                    DailyNews dailyNews = (DailyNews)message.obj;
+                    commonUtil.promtMsg("Download Daily news Success!");
+                    break;
+                case Constant.DOWNLOAD_NEWS_DETAIL_SUCCESS:
+                    Detail detail = (Detail)message.obj;
+                    commonUtil.promtMsg("Download news Detail Success");
+                    break;
+
+                case Constant.DOWNLOAD_BEFORE_NEWS_SUCCESS:
+                    DailyNews beforeNews = (DailyNews)message.obj;
+                    commonUtil.promtMsg("Download Before News Success!");
+                    break;
+                case Constant.DOWNLOAD_THEME_LIST_SUCCESS:
+                    ThemeList themeList = (ThemeList)message.obj;
+                    commonUtil.promtMsg("Download Theme List Success!");
+                    break;
+                case Constant.DOWNLOAD_THEME_NEWS_SUCCESS:
+                    ThemeNews themeNews = (ThemeNews)message.obj;
+                    Log.d(tag, themeNews.getDescription());
+                    commonUtil.promtMsg("Download Theme News Success!");
+                    break;
+                case Constant.NETWORK_ERROR:
+                    commonUtil.promtMsg("Network Error");
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
+
     @Override
     protected int setLayout() {
         return R.layout.activity_main;
@@ -63,6 +135,13 @@ public class MainActivity extends BaseActivity
         viewList.add(getLayoutInflater().inflate(R.layout.top_story_item, null));
         ViewPager viewPager = (ViewPager)findViewById(R.id.top_story);
         viewPager.setAdapter(new TopStoryAdapter(viewList));
+
+        if (!NetworkUtil.isNetworkAvailable(this))
+            commonUtil.promtMsg("Network is not available");
+        else {
+            Intent intent = new Intent(MainActivity.this, NewsService.class);
+            bindService(intent, sc, BIND_AUTO_CREATE);
+        }
     }
 
     @Override
@@ -99,7 +178,7 @@ public class MainActivity extends BaseActivity
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 

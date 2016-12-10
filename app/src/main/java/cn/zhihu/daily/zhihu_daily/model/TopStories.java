@@ -1,23 +1,17 @@
 package cn.zhihu.daily.zhihu_daily.model;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
- * Created by morc on 16-12-7.
+ * Created by morc on 16-12-9.
  */
 
-public class Detail {
-    private String body;
+public class TopStories {
     private String title;
     private String image;
     private int type;
     private int id;
-
-    public String getBody() {
-        return body;
-    }
-
-    public void setBody(String body) {
-        this.body = body;
-    }
 
     public String getTitle() {
         return title;
