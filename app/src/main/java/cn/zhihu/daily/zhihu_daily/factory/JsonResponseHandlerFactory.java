@@ -24,7 +24,7 @@ public class JsonResponseHandlerFactory {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                T temp = null;
+                T temp;
                 try {
                     temp = JSON.parseObject(responseString, className);
                 } catch (JSONException e) {
@@ -32,14 +32,12 @@ public class JsonResponseHandlerFactory {
                     Message msg = new Message();
                     msg.what = FAIL_CODE;
                     handler.sendMessage(msg);
+                    return;
                 }
+
                 Message msg = new Message();
-                if (temp != null) {
-                    msg.obj = temp;
-                    msg.what = SUCCESS_CODE;
-                } else {
-                    msg.what = FAIL_CODE;
-                }
+                msg.obj = temp;
+                msg.what = SUCCESS_CODE;
                 handler.sendMessage(msg);
             }
         };

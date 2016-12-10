@@ -1,13 +1,10 @@
 package cn.zhihu.daily.zhihu_daily.model;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 /**
  * Created by morc on 16-12-9.
  */
 
-public class TopStories {
+public class TopStory {
     private String title;
     private String image;
     private int type;

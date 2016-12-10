@@ -1,12 +1,5 @@
 package cn.zhihu.daily.zhihu_daily.model;
 
-import com.alibaba.fastjson.JSON;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,13 +9,13 @@ import java.util.List;
 public class DailyNews {
     private String date;
     private List<Summary> stories;
-    private List<TopStories> top_stories;
+    private List<TopStory> top_stories;
 
-    public List<TopStories> getTop_stories() {
+    public List<TopStory> getTop_stories() {
         return top_stories;
     }
 
-    public void setTop_stories(List<TopStories> top_stories) {
+    public void setTop_stories(List<TopStory> top_stories) {
         this.top_stories = top_stories;
     }
 

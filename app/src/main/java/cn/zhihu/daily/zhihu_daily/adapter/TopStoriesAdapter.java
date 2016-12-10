@@ -10,11 +10,11 @@ import java.util.List;
  * Created by tommy on 12/7/16.
  */
 
-public class TopStoryAdapter extends PagerAdapter {
+public class TopStoriesAdapter extends PagerAdapter {
 
     private List<View> contentList;
 
-    public TopStoryAdapter(List<View> contentList) {
+    public TopStoriesAdapter(List<View> contentList) {
         this.contentList = contentList;
     }
 

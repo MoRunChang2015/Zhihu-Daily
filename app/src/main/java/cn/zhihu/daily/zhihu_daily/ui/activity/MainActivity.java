@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -14,7 +13,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import java.util.ArrayList;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
@@ -23,10 +21,10 @@ import android.os.IBinder;
 import android.os.Message;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import cn.zhihu.daily.zhihu_daily.R;
-import cn.zhihu.daily.zhihu_daily.adapter.TopStoryAdapter;
 import cn.zhihu.daily.zhihu_daily.base.BaseActivity;
 import cn.zhihu.daily.zhihu_daily.constant.Constant;
 import cn.zhihu.daily.zhihu_daily.model.DailyNews;
@@ -34,6 +32,7 @@ import cn.zhihu.daily.zhihu_daily.model.Detail;
 import cn.zhihu.daily.zhihu_daily.model.ThemeList;
 import cn.zhihu.daily.zhihu_daily.model.ThemeNews;
 import cn.zhihu.daily.zhihu_daily.service.NewsService;
+import cn.zhihu.daily.zhihu_daily.ui.view.TopStoriesFragment;
 import cn.zhihu.daily.zhihu_daily.util.CommonUtil;
 import cn.zhihu.daily.zhihu_daily.util.NetworkUtil;
 
@@ -41,12 +40,15 @@ public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     CommonUtil commonUtil;
+    TopStoriesFragment topStoriesFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         commonUtil = new CommonUtil(findViewById(R.id.fab));
+        topStoriesFragment = (TopStoriesFragment)getFragmentManager().findFragmentById(R.id.top_story_fragment);
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -92,6 +94,7 @@ public class MainActivity extends BaseActivity
             switch (message.what) {
                 case Constant.DOWNLOAD_LATEST_NEWS_SUCCESS:
                     DailyNews dailyNews = (DailyNews)message.obj;
+                    topStoriesFragment.setContent(MainActivity.this, dailyNews.getTop_stories());
                     commonUtil.promtMsg("Download Daily news Success!");
                     break;
                 case Constant.DOWNLOAD_NEWS_DETAIL_SUCCESS:
@@ -128,13 +131,13 @@ public class MainActivity extends BaseActivity
 
     @Override
     protected void initViews(Bundle savedInstanceState) {
-        List<View> viewList = new ArrayList<>();
-        viewList.add(getLayoutInflater().inflate(R.layout.top_story_item, null));
-        viewList.add(getLayoutInflater().inflate(R.layout.top_story_item, null));
-        viewList.add(getLayoutInflater().inflate(R.layout.top_story_item, null));
-        viewList.add(getLayoutInflater().inflate(R.layout.top_story_item, null));
-        ViewPager viewPager = (ViewPager)findViewById(R.id.top_story);
-        viewPager.setAdapter(new TopStoryAdapter(viewList));
+//        List<View> viewList = new ArrayList<>();
+//        viewList.add(getLayoutInflater().inflate(R.layout.top_story_item, null));
+//        viewList.add(getLayoutInflater().inflate(R.layout.top_story_item, null));
+//        viewList.add(getLayoutInflater().inflate(R.layout.top_story_item, null));
+//        viewList.add(getLayoutInflater().inflate(R.layout.top_story_item, null));
+//        ViewPager viewPager = (ViewPager)findViewById(R.id.top_story);
+//        viewPager.setAdapter(new TopStoriesAdapter(viewList));
 
         if (!NetworkUtil.isNetworkAvailable(this))
             commonUtil.promtMsg("Network is not available");

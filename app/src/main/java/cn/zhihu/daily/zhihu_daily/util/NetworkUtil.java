@@ -3,8 +3,6 @@ package cn.zhihu.daily.zhihu_daily.util;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.BinaryHttpResponseHandler;
@@ -12,11 +10,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import cn.zhihu.daily.zhihu_daily.constant.Constant;
-import cz.msebera.android.httpclient.Header;
 
 /**
  * Created by morc on 16-12-7.
@@ -82,5 +76,9 @@ public class NetworkUtil {
 
     public static void getThemeNews(int themeId, TextHttpResponseHandler handler) {
         NetworkUtil.get(Constant.ThemeNews + Integer.toString(themeId), handler);
+    }
+
+    public static void getImage(String url, BinaryHttpResponseHandler handler) {
+        get(url, handler);
     }
 }
