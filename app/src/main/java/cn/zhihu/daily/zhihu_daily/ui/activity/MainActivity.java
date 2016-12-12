@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -21,10 +23,9 @@ import android.os.IBinder;
 import android.os.Message;
 import android.util.Log;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import butterknife.BindView;
 import cn.zhihu.daily.zhihu_daily.R;
+import cn.zhihu.daily.zhihu_daily.adapter.StoriesListAdapter;
 import cn.zhihu.daily.zhihu_daily.base.BaseActivity;
 import cn.zhihu.daily.zhihu_daily.constant.Constant;
 import cn.zhihu.daily.zhihu_daily.model.DailyNews;
@@ -38,22 +39,27 @@ import cn.zhihu.daily.zhihu_daily.util.NetworkUtil;
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    final String tag = "MainActivity";
 
     CommonUtil commonUtil;
+    private NewsService newsService;
+
     TopStoriesFragment topStoriesFragment;
+
+    @BindView(R.id.story_list)
+    RecyclerView storyListView;
+
+    @BindView(R.id.fab)
+    FloatingActionButton fab;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        commonUtil = new CommonUtil(findViewById(R.id.fab));
-        topStoriesFragment = (TopStoriesFragment)getFragmentManager().findFragmentById(R.id.top_story_fragment);
-
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -72,8 +78,6 @@ public class MainActivity extends BaseActivity
         navigationView.setNavigationItemSelectedListener(this);
     }
 
-    final String tag = "MainActivity";
-    private NewsService newsService;
     private ServiceConnection sc =  new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
@@ -95,6 +99,7 @@ public class MainActivity extends BaseActivity
                 case Constant.DOWNLOAD_LATEST_NEWS_SUCCESS:
                     DailyNews dailyNews = (DailyNews)message.obj;
                     topStoriesFragment.setContent(MainActivity.this, dailyNews.getTop_stories());
+                    storyListView.setAdapter(new StoriesListAdapter(dailyNews.getStories()));
                     commonUtil.promtMsg("Download Daily news Success!");
                     break;
                 case Constant.DOWNLOAD_NEWS_DETAIL_SUCCESS:
@@ -131,13 +136,7 @@ public class MainActivity extends BaseActivity
 
     @Override
     protected void initViews(Bundle savedInstanceState) {
-//        List<View> viewList = new ArrayList<>();
-//        viewList.add(getLayoutInflater().inflate(R.layout.top_story_item, null));
-//        viewList.add(getLayoutInflater().inflate(R.layout.top_story_item, null));
-//        viewList.add(getLayoutInflater().inflate(R.layout.top_story_item, null));
-//        viewList.add(getLayoutInflater().inflate(R.layout.top_story_item, null));
-//        ViewPager viewPager = (ViewPager)findViewById(R.id.top_story);
-//        viewPager.setAdapter(new TopStoriesAdapter(viewList));
+        commonUtil = new CommonUtil(fab);
 
         if (!NetworkUtil.isNetworkAvailable(this))
             commonUtil.promtMsg("Network is not available");
@@ -145,6 +144,9 @@ public class MainActivity extends BaseActivity
             Intent intent = new Intent(MainActivity.this, NewsService.class);
             bindService(intent, sc, BIND_AUTO_CREATE);
         }
+        topStoriesFragment = (TopStoriesFragment)getFragmentManager().
+                findFragmentById(R.id.top_story_fragment);
+        storyListView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
     }
 
     @Override

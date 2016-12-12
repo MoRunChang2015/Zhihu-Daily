@@ -1,11 +1,8 @@
 package cn.zhihu.daily.zhihu_daily.factory;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
-import android.view.View;
 import android.widget.ImageView;
 
 import com.loopj.android.http.BinaryHttpResponseHandler;
@@ -24,6 +21,10 @@ public class ImageResponseHandlerFactory {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] binaryData) {
                 Bitmap imageBitmap = BitmapFactory.decodeByteArray(binaryData, 0, binaryData.length);
+                Log.i("ImageFactory", Integer.toString(imageBitmap.getHeight()));
+                if (imageBitmap.getHeight() > 600) {
+                    imageBitmap = Bitmap.createBitmap(imageBitmap, 0, 0, imageBitmap.getWidth(), 550);
+                }
                 imageContainer.setImageBitmap(imageBitmap);
             }
 

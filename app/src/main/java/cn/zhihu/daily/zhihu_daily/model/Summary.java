@@ -1,5 +1,7 @@
 package cn.zhihu.daily.zhihu_daily.model;
 
+import android.graphics.Bitmap;
+
 import java.util.List;
 
 /**
@@ -9,6 +11,7 @@ import java.util.List;
 public class Summary {
     private String title;
     private List<String> images;
+    private Bitmap image;
     private int id;
     private int type;
 
@@ -26,6 +29,14 @@ public class Summary {
 
     public void setImages(List<String> images) {
         this.images = images;
+    }
+
+    public Bitmap getImage() {
+        return image;
+    }
+
+    public void setImage(Bitmap image) {
+        this.image = image;
     }
 
     public int getType() {
