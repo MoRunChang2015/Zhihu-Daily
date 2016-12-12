@@ -47,7 +47,7 @@ public class TopStoriesFragment extends Fragment implements ViewPager.OnPageChan
             ((TextView)topStoryItem.findViewById(R.id.title)).setText(topStory.getTitle());
             NetworkUtil.getImage(topStory.getImage(),
                     ImageResponseHandlerFactory.createHandler(
-                            (ImageView) topStoryItem.findViewById(R.id.image)));
+                            (ImageView) topStoryItem.findViewById(R.id.image), null));
             topStoryViewList.add(topStoryItem);
         }
         m_viewPager.setAdapter(new TopStoriesAdapter(topStoryViewList));

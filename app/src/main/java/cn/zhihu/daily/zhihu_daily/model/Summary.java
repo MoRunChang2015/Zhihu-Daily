@@ -4,14 +4,16 @@ import android.graphics.Bitmap;
 
 import java.util.List;
 
+import cn.zhihu.daily.zhihu_daily.Interface.BitmapContainer;
+
 /**
  * Created by morc on 16-12-7.
  */
 
-public class Summary {
+public class Summary implements BitmapContainer {
     private String title;
     private List<String> images;
-    private Bitmap image;
+    private Bitmap bitmap;
     private int id;
     private int type;
 
@@ -31,12 +33,14 @@ public class Summary {
         this.images = images;
     }
 
-    public Bitmap getImage() {
-        return image;
+    @Override
+    public Bitmap getBitmap() {
+        return bitmap;
     }
 
-    public void setImage(Bitmap image) {
-        this.image = image;
+    @Override
+    public void setBitmap(Bitmap bitmap) {
+        this.bitmap = bitmap;
     }
 
     public int getType() {

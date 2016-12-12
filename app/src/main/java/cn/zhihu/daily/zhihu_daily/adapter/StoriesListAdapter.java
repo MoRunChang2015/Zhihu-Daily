@@ -1,6 +1,5 @@
 package cn.zhihu.daily.zhihu_daily.adapter;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +12,6 @@ import java.util.List;
 import cn.zhihu.daily.zhihu_daily.R;
 import cn.zhihu.daily.zhihu_daily.factory.ImageResponseHandlerFactory;
 import cn.zhihu.daily.zhihu_daily.model.Summary;
-import cn.zhihu.daily.zhihu_daily.ui.activity.MainActivity;
 import cn.zhihu.daily.zhihu_daily.util.NetworkUtil;
 
 /**
@@ -39,11 +37,11 @@ public class StoriesListAdapter extends RecyclerView.Adapter<StoryListItemViewHo
     public void onBindViewHolder(StoryListItemViewHolder holder, int position) {
         Summary item = contentList.get(position);
         holder.textView.setText(item.getTitle());
-        if (item.getImage() != null) {
-            holder.imageView.setImageBitmap(item.getImage());
+        if (item.getBitmap() != null) {
+            holder.imageView.setImageBitmap(item.getBitmap());
         } else {
             NetworkUtil.getImage(item.getImages().get(0),
-                    ImageResponseHandlerFactory.createHandler(holder.imageView));
+                    ImageResponseHandlerFactory.createHandler(holder.imageView, item));
         }
     }
 
