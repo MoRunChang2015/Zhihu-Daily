@@ -120,7 +120,7 @@ public class MainActivity extends BaseActivity
                 case Constant.DOWNLOAD_LATEST_NEWS_SUCCESS:
                     DailyNews dailyNews = (DailyNews)message.obj;
                     topStoriesFragment.setContent(MainActivity.this, dailyNews.getTop_stories());
-                    storyListView.setAdapter(new StoriesListAdapter(dailyNews.getStories()));
+                    storyListView.setAdapter(new StoriesListAdapter(MainActivity.this, dailyNews.getStories()));
                     commonUtil.promtMsg("Download Daily news Success!");
                     break;
                 case Constant.DOWNLOAD_NEWS_DETAIL_SUCCESS:
