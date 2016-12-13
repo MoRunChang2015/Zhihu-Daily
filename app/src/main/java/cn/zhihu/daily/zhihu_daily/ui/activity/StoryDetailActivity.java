@@ -8,9 +8,16 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.sax.RootElement;
+import android.util.Log;
 import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import butterknife.BindView;
 import cn.zhihu.daily.zhihu_daily.R;
@@ -32,6 +39,8 @@ public class StoryDetailActivity extends BaseActivity {
     private NewsService newsService;
 
     private Detail detail;
+
+    final String tag = "StoryDetailActivity";
 
     @BindView(R.id.image)
     ImageView imageView;
@@ -86,6 +95,7 @@ public class StoryDetailActivity extends BaseActivity {
                     imageSourceTextView.setText(detail.getImage_source());
                     NetworkUtil.getImage(detail.getImage(),
                             ImageResponseHandlerFactory.createHandler(imageView, detail));
+                    setWebContent(detail);
                     commonUtil.promtMsg("Download news Detail Success");
                     break;
                 default:
@@ -93,6 +103,14 @@ public class StoryDetailActivity extends BaseActivity {
             }
         }
     };
+
+
+    private void setWebContent(Detail detail) {
+        String content;
+        content = "<html><head>" + Constant.NewsStyle + "</head><body>" + detail.getBody() + "</body></html>";
+        content = content.replace("<div class=\"img-place-holder\"></div>", "");
+        contentDetailWebView.loadDataWithBaseURL("x-data://base", content, "text/html", "UTF-8", null);
+    }
 
     @Override
     protected void onDestroy() {
