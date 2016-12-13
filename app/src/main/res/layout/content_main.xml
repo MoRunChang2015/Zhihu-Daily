@@ -20,7 +20,7 @@
             android:id="@+id/top_story_fragment"
             android:name="cn.zhihu.daily.zhihu_daily.ui.view.TopStoriesFragment"
             android:layout_width="match_parent"
-            android:layout_height="320dp"/>
+            android:layout_height="@dimen/image_height"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/story_list"

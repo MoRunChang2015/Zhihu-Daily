@@ -21,7 +21,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".ui.activity.MainActivity"
             android:label="@string/title_activity_main"
@@ -32,6 +31,8 @@
             android:enabled="true"
             android:exported="true"
             android:permission="android.permission.INTERNET" />
+
+        <activity android:name=".ui.activity.StoryDetailActivity"></activity>
     </application>
 
 </manifest>

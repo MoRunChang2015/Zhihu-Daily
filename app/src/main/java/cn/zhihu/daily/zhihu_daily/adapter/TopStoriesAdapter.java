@@ -18,6 +18,7 @@ public class TopStoriesAdapter extends PagerAdapter {
         this.contentList = contentList;
     }
 
+
     @Override
     public int getCount() {
         return contentList.size();

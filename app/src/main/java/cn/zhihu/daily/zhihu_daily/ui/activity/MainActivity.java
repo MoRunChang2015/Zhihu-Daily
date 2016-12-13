@@ -78,6 +78,27 @@ public class MainActivity extends BaseActivity
         navigationView.setNavigationItemSelectedListener(this);
     }
 
+
+    @Override
+    protected int setLayout() {
+        return R.layout.activity_main;
+    }
+
+    @Override
+    protected void initViews(Bundle savedInstanceState) {
+        commonUtil = new CommonUtil(fab);
+
+        if (!NetworkUtil.isNetworkAvailable(this))
+            commonUtil.promtMsg("Network is not available");
+        else {
+            Intent intent = new Intent(MainActivity.this, NewsService.class);
+            bindService(intent, sc, BIND_AUTO_CREATE);
+        }
+        topStoriesFragment = (TopStoriesFragment)getFragmentManager().
+                findFragmentById(R.id.top_story_fragment);
+        storyListView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+    }
+
     private ServiceConnection sc =  new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
@@ -128,26 +149,6 @@ public class MainActivity extends BaseActivity
             }
         }
     };
-
-    @Override
-    protected int setLayout() {
-        return R.layout.activity_main;
-    }
-
-    @Override
-    protected void initViews(Bundle savedInstanceState) {
-        commonUtil = new CommonUtil(fab);
-
-        if (!NetworkUtil.isNetworkAvailable(this))
-            commonUtil.promtMsg("Network is not available");
-        else {
-            Intent intent = new Intent(MainActivity.this, NewsService.class);
-            bindService(intent, sc, BIND_AUTO_CREATE);
-        }
-        topStoriesFragment = (TopStoriesFragment)getFragmentManager().
-                findFragmentById(R.id.top_story_fragment);
-        storyListView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
-    }
 
     @Override
     public void onBackPressed() {

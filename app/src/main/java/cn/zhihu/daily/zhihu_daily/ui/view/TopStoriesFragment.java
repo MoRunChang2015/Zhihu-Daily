@@ -2,6 +2,7 @@ package cn.zhihu.daily.zhihu_daily.ui.view;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import cn.zhihu.daily.zhihu_daily.R;
 import cn.zhihu.daily.zhihu_daily.adapter.TopStoriesAdapter;
 import cn.zhihu.daily.zhihu_daily.factory.ImageResponseHandlerFactory;
 import cn.zhihu.daily.zhihu_daily.model.TopStory;
+import cn.zhihu.daily.zhihu_daily.ui.activity.StoryDetailActivity;
 import cn.zhihu.daily.zhihu_daily.util.NetworkUtil;
 
 /**
@@ -39,15 +41,25 @@ public class TopStoriesFragment extends Fragment implements ViewPager.OnPageChan
         return topStoriesView;
     }
 
-    public void setContent(Context context, List<TopStory> contentList) {
+    public void setContent(final Context context, List<TopStory> contentList) {
         LayoutInflater inflater = LayoutInflater.from(context);
         List<View> topStoryViewList = new ArrayList<>();
-        for (TopStory topStory : contentList) {
-            View topStoryItem = inflater.inflate(R.layout.top_story_item, null);
+        for (final TopStory topStory : contentList) {
+            final View topStoryItem = inflater.inflate(R.layout.top_story_item, m_viewPager, false);
+
+            topStoryItem.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(context, StoryDetailActivity.class);
+                    intent.putExtra("Detail", topStory.getId());
+                    startActivity(intent);
+                }
+            });
+
             ((TextView)topStoryItem.findViewById(R.id.title)).setText(topStory.getTitle());
             NetworkUtil.getImage(topStory.getImage(),
                     ImageResponseHandlerFactory.createHandler(
-                            (ImageView) topStoryItem.findViewById(R.id.image), null));
+                            (ImageView) topStoryItem.findViewById(R.id.image), topStory));
             topStoryViewList.add(topStoryItem);
         }
         m_viewPager.setAdapter(new TopStoriesAdapter(topStoryViewList));

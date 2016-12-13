@@ -49,7 +49,7 @@ public class NewsService extends Service {
     }
 
 
-    public void getStartImage(final Handler handler) {
+    public void getStartUpImage(final Handler handler) {
         NetworkUtil.getStartImageUrl(new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
