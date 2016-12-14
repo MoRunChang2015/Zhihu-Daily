@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginTop="55dp"
     android:background="@color/mainActivityBackground">
     <LinearLayout
         android:id="@+id/content_main"
@@ -20,7 +21,7 @@
             android:id="@+id/top_story_fragment"
             android:name="cn.zhihu.daily.zhihu_daily.ui.view.TopStoriesFragment"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/image_height"
+            android:layout_height="265dp"
             tools:layout="@layout/top_story_item" />
 
         <android.support.v7.widget.RecyclerView

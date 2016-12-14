@@ -17,6 +17,16 @@ public class Summary implements BitmapContainer {
     private int id;
     private int type;
 
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    private String date;
+
     public String getTitle() {
         return title;
     }

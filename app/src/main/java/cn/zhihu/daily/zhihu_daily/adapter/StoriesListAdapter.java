@@ -8,9 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.Calendar;
 import java.util.List;
 
 import cn.zhihu.daily.zhihu_daily.R;
@@ -23,33 +23,74 @@ import cn.zhihu.daily.zhihu_daily.util.NetworkUtil;
  * Created by tommy on 12/12/16.
  */
 
-public class StoriesListAdapter extends RecyclerView.Adapter<StoryListItemViewHolder> {
+public class StoriesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context context;
     private List<Summary> contentList;
 
+    private String[] currentShowingDate = new String[3];
+
+    private static final int TYPE_ITEM = 1;
+    private static final int TYPE_DATE = 2;
+
     public StoriesListAdapter(Context context, List<Summary> contentList) {
         this.contentList = contentList;
         this.context = context;
+
+        Calendar calendar = Calendar.getInstance();
+        currentShowingDate[0] = Integer.toString(calendar.get(Calendar.YEAR));
+        currentShowingDate[1] = Integer.toString(calendar.get(Calendar.MONTH) + 1);
+        currentShowingDate[2] = Integer.toString(calendar.get(Calendar.DATE));
     }
 
     @Override
-    public StoryListItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View storyListItem = inflater.inflate(R.layout.story_list_item, parent, false);
-        return new StoryListItemViewHolder(context, storyListItem);
-    }
-
-    @Override
-    public void onBindViewHolder(final StoryListItemViewHolder holder, int position) {
-        Summary item = contentList.get(position);
-        holder.textView.setText(item.getTitle());
-        holder.id = contentList.get(position).getId();
-        if (item.getBitmap() != null) {
-            holder.imageView.setImageBitmap(item.getBitmap());
+    public int getItemViewType(int position) {
+        if (contentList.get(position).getDate() == null) {
+            return TYPE_ITEM;
         } else {
-            NetworkUtil.getImage(item.getImages().get(0),
-                    ImageResponseHandlerFactory.createHandler(holder.imageView, item));
+            return TYPE_DATE;
+        }
+    }
+
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        if (viewType == TYPE_ITEM) {
+            View storyListItem = inflater.inflate(R.layout.story_list_item, parent, false);
+            return new StoryListItemViewHolder(context, storyListItem);
+        }
+        View storyListDate = inflater.inflate(R.layout.story_list_date, parent, false);
+        return new StoryListDateViewHolder(storyListDate);
+
+    }
+
+    @Override
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
+        Summary item = contentList.get(position);
+        if (holder.getItemViewType() == TYPE_ITEM) {
+            StoryListItemViewHolder itemViewHolder = (StoryListItemViewHolder) holder;
+            itemViewHolder.textView.setText(item.getTitle());
+            itemViewHolder.id = contentList.get(position).getId();
+            if (item.getBitmap() != null) {
+                itemViewHolder.imageView.setImageBitmap(item.getBitmap());
+            } else {
+                NetworkUtil.getImage(item.getImages().get(0),
+                        ImageResponseHandlerFactory.createHandler(itemViewHolder.imageView, item));
+            }
+            if (position == contentList.size() - 1) {
+//                internetAccess.getPreviousNews(currentShowingDate[0] +
+//                                currentShowingDate[1] +
+//                                currentShowingDate[2],
+//                        contentList);
+                Summary dateSummary = new Summary();
+                dateSummary.setDate(currentShowingDate[0] + "年" +
+                        currentShowingDate[1] + "月" +
+                        currentShowingDate[2] + "日的大新闻");
+                contentList.add(dateSummary);
+            }
+        } else {
+            StoryListDateViewHolder dateViewHolder = (StoryListDateViewHolder)holder;
+            dateViewHolder.textView.setText(item.getDate());
         }
     }
 
@@ -78,5 +119,14 @@ class StoryListItemViewHolder extends RecyclerView.ViewHolder {
                 context.startActivity(intent);
             }
         });
+    }
+}
+
+class StoryListDateViewHolder extends RecyclerView.ViewHolder {
+    TextView textView;
+
+    StoryListDateViewHolder(View itemView) {
+        super(itemView);
+        textView = (TextView)itemView.findViewById(R.id.date);
     }
 }

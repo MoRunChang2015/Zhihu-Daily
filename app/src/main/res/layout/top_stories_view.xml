@@ -6,12 +6,17 @@
         android:id="@+id/top_story"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
-    <LinearLayout
-        android:id="@+id/top_story_indicator"
+    <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_marginBottom="15dp"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true">
+        <LinearLayout
+            android:id="@+id/top_story_indicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" />
+    </FrameLayout>
+
 </RelativeLayout>

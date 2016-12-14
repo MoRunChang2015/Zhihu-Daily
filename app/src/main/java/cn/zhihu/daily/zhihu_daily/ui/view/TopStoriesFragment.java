@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,7 +34,6 @@ public class TopStoriesFragment extends Fragment implements ViewPager.OnPageChan
     ViewPager m_viewPager;
 
     LinearLayout m_indicatorLayout;
-    List<ImageView> m_indicatorNormal = new ArrayList<>();
 
     View topStoriesView;
 
@@ -45,7 +45,6 @@ public class TopStoriesFragment extends Fragment implements ViewPager.OnPageChan
         topStoriesView = inflater.inflate(R.layout.top_stories_view, container, false);
         m_viewPager = (ViewPager)topStoriesView.findViewById(R.id.top_story);
         m_indicatorLayout = (LinearLayout)topStoriesView.findViewById(R.id.top_story_indicator);
-
         m_viewPager.addOnPageChangeListener(this);
 
         return topStoriesView;
@@ -53,6 +52,7 @@ public class TopStoriesFragment extends Fragment implements ViewPager.OnPageChan
 
     public void setContent(final Context context, List<TopStory> contentList) {
         LayoutInflater inflater = LayoutInflater.from(context);
+
         List<View> topStoryViewList = new ArrayList<>();
         for (final TopStory topStory : contentList) {
             final View topStoryItem = inflater.inflate(R.layout.top_story_item, m_viewPager, false);
@@ -83,15 +83,13 @@ public class TopStoriesFragment extends Fragment implements ViewPager.OnPageChan
             }
             indicatorNum = m_indicatorLayout.getChildCount();
         }
-
         ((ImageView)m_indicatorLayout.getChildAt(0)).setImageResource(R.drawable.indicator_selected);
-
         m_viewPager.setAdapter(new TopStoriesAdapter(topStoryViewList));
     }
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-        // Log.i("Scroll", Integer.toString(position) + " " + Float.toString(positionOffset) + " " + Integer.toString(positionOffsetPixels));
+        //Log.i("Scroll", Integer.toString(position) + " " + Float.toString(positionOffset) + " " + Integer.toString(positionOffsetPixels));
     }
 
     @Override

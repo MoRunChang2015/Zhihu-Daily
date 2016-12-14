@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">知乎日报</string>
+    <string name="app_name">粉丝日报</string>
     <string name="title_activity_welcome">WelcomeActivity</string>
     <string name="title_activity_main">MainActivity</string>
 
