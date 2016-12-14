@@ -30,6 +30,7 @@ import cn.zhihu.daily.zhihu_daily.base.BaseActivity;
 import cn.zhihu.daily.zhihu_daily.constant.Constant;
 import cn.zhihu.daily.zhihu_daily.model.DailyNews;
 import cn.zhihu.daily.zhihu_daily.model.Detail;
+import cn.zhihu.daily.zhihu_daily.model.Theme;
 import cn.zhihu.daily.zhihu_daily.model.ThemeList;
 import cn.zhihu.daily.zhihu_daily.model.ThemeNews;
 import cn.zhihu.daily.zhihu_daily.service.NewsService;
@@ -37,8 +38,7 @@ import cn.zhihu.daily.zhihu_daily.ui.view.TopStoriesFragment;
 import cn.zhihu.daily.zhihu_daily.util.CommonUtil;
 import cn.zhihu.daily.zhihu_daily.util.NetworkUtil;
 
-public class MainActivity extends BaseActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends BaseActivity {
     final String tag = "MainActivity";
 
     CommonUtil commonUtil;
@@ -67,15 +67,11 @@ public class MainActivity extends BaseActivity
                         .setAction("Action", null).show();
             }
         });
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+        drawer.addDrawerListener(toggle);
         toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
     }
 
 
@@ -104,6 +100,7 @@ public class MainActivity extends BaseActivity
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
             newsService = ((NewsService.MyBinder)iBinder).getService();
             newsService.getDailyNews(handler);
+            newsService.getThemeList(handler);
         }
 
         @Override
@@ -134,6 +131,7 @@ public class MainActivity extends BaseActivity
                     break;
                 case Constant.DOWNLOAD_THEME_LIST_SUCCESS:
                     ThemeList themeList = (ThemeList)message.obj;
+                    setNavigation(themeList);
                     commonUtil.promtMsg("Download Theme List Success!");
                     break;
                 case Constant.DOWNLOAD_THEME_NEWS_SUCCESS:
@@ -182,7 +180,7 @@ public class MainActivity extends BaseActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
+    /*@SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
@@ -205,5 +203,15 @@ public class MainActivity extends BaseActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }*/
+
+
+    private void setNavigation(ThemeList themeList) {
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        Menu menu = navigationView.getMenu().getItem(0).getSubMenu();
+        for (Theme theme : themeList.getOthers()) {
+            menu.add(0, theme.getId(), 0, theme.getName());
+        }
+        //navigationView.setNavigationItemSelectedListener(this);
     }
 }

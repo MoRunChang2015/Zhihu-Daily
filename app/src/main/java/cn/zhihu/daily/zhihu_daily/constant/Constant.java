@@ -31,6 +31,4 @@ public interface Constant {
     int DOWNLOAD_THEME_LIST_SUCCESS = 4;
 
     int DOWNLOAD_THEME_NEWS_SUCCESS = 5;
-
-    String NewsStyle = "<link rel=\"stylesheet\" type=\"text/css\" href=\"file:///android_asset/style.css\" />";
 }

@@ -106,9 +106,10 @@ public class StoryDetailActivity extends BaseActivity {
 
 
     private void setWebContent(Detail detail) {
+        final String NewsStyle = "<link rel=\"stylesheet\" type=\"text/css\" href=\"file:///android_asset/style.css\" />";
         String content;
-        content = "<html><head>" + Constant.NewsStyle + "</head><body>" + detail.getBody() + "</body></html>";
-        content = content.replace("<div class=\"img-place-holder\"></div>", "");
+        content = "<html><head>" + NewsStyle + "</head><body>" + detail.getBody() + "</body></html>";
+        content = content.replace("<div class=\"i`mg-place-holder\"></div>", "");
         contentDetailWebView.loadDataWithBaseURL("x-data://base", content, "text/html", "UTF-8", null);
     }
 
