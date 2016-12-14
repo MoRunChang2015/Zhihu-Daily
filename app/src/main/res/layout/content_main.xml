@@ -20,7 +20,8 @@
             android:id="@+id/top_story_fragment"
             android:name="cn.zhihu.daily.zhihu_daily.ui.view.TopStoriesFragment"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/image_height"/>
+            android:layout_height="@dimen/image_height"
+            tools:layout="@layout/top_story_item" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/story_list"
@@ -28,6 +29,8 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:layout_marginTop="6dp"
+            android:layout_marginStart="6dp"
+            android:layout_marginEnd="6dp"
             android:scrollbars="none"
             android:nestedScrollingEnabled="false"/>
 

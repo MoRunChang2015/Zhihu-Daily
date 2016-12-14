@@ -4,7 +4,8 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="6dp"
+    android:layout_marginTop="4dp"
+    android:layout_marginBottom="4dp"
     android:paddingStart="20dp"
     android:paddingEnd="20dp"
     android:paddingTop="10dp"
@@ -19,7 +20,7 @@
         android:layout_weight="1"
         android:layout_marginEnd="10dp"
         android:scaleType="fitXY"
-        android:background="@color/mainActivityBackground"/>
+        android:background="@color/mainActivityBackground" />
     <TextView
         android:id="@+id/title"
         android:layout_width="0dp"
