@@ -13,13 +13,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <android.support.design.widget.NavigationView
-        android:id="@+id/nav_view"
-        android:layout_width="wrap_content"
+    <fragment
+        android:layout_width="250dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:fitsSystemWindows="true"
-        app:headerLayout="@layout/nav_header_main"
-        app:menu="@menu/theme_list_drawer" />
-
+        android:name="cn.zhihu.daily.zhihu_daily.ui.view.ThemeListFragment"
+        android:id="@+id/theme_list_fragment"/>
 </android.support.v4.widget.DrawerLayout>

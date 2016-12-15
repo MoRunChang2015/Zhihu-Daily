@@ -4,8 +4,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -34,6 +37,7 @@ import cn.zhihu.daily.zhihu_daily.model.Theme;
 import cn.zhihu.daily.zhihu_daily.model.ThemeList;
 import cn.zhihu.daily.zhihu_daily.model.ThemeNews;
 import cn.zhihu.daily.zhihu_daily.service.NewsService;
+import cn.zhihu.daily.zhihu_daily.ui.view.ThemeListFragment;
 import cn.zhihu.daily.zhihu_daily.ui.view.TopStoriesFragment;
 import cn.zhihu.daily.zhihu_daily.util.CommonUtil;
 import cn.zhihu.daily.zhihu_daily.util.NetworkUtil;
@@ -52,6 +56,9 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.fab)
     FloatingActionButton fab;
 
+    @BindView(R.id.drawer_layout)
+    DrawerLayout drawer;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +74,6 @@ public class MainActivity extends BaseActivity {
                         .setAction("Action", null).show();
             }
         });
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -142,6 +148,12 @@ public class MainActivity extends BaseActivity {
                 case Constant.NETWORK_ERROR:
                     commonUtil.promtMsg("Network Error");
                     break;
+
+                case Constant.THEME_CHANGE:
+                    drawer.closeDrawers();
+                    Theme theme = (Theme) message.obj;
+                    commonUtil.promtMsg("theme name is " + theme.getName());
+                    break;
                 default:
                     break;
             }
@@ -150,7 +162,6 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -160,7 +171,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
+        // Inflate the ThemeListFragment; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
@@ -180,38 +191,10 @@ public class MainActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    /*@SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }*/
-
 
     private void setNavigation(ThemeList themeList) {
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        Menu menu = navigationView.getMenu().getItem(0).getSubMenu();
-        for (Theme theme : themeList.getOthers()) {
-            menu.add(0, theme.getId(), 0, theme.getName());
-        }
-        //navigationView.setNavigationItemSelectedListener(this);
+        ThemeListFragment themeListFragment = (ThemeListFragment)getFragmentManager()
+                .findFragmentById(R.id.theme_list_fragment);
+        themeListFragment.setThemeList(themeList, handler);
     }
 }

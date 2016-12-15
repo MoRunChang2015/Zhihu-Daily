@@ -10,4 +10,7 @@
 
     <string name="avatar_hint_text">点头像也不能登录</string>
     <string name="nav_theme_text">Theme</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

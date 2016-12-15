@@ -31,4 +31,8 @@ public interface Constant {
     int DOWNLOAD_THEME_LIST_SUCCESS = 4;
 
     int DOWNLOAD_THEME_NEWS_SUCCESS = 5;
+
+    int THEME_CHANGE = 6;
+
+    int THEME_HOME_ID = -2;
 }
