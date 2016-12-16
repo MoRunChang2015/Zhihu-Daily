@@ -49,6 +49,7 @@ public class MainActivity extends BaseActivity {
     private NewsService newsService;
 
     TopStoriesFragment topStoriesFragment;
+    StoriesListAdapter storiesListAdapter;
 
     @BindView(R.id.story_list)
     RecyclerView storyListView;
@@ -123,7 +124,15 @@ public class MainActivity extends BaseActivity {
                 case Constant.DOWNLOAD_LATEST_NEWS_SUCCESS:
                     DailyNews dailyNews = (DailyNews)message.obj;
                     topStoriesFragment.setContent(MainActivity.this, dailyNews.getTop_stories());
-                    storyListView.setAdapter(new StoriesListAdapter(MainActivity.this, dailyNews.getStories()));
+                    storiesListAdapter = new StoriesListAdapter(MainActivity.this,
+                            dailyNews.getStories(), new StoriesListAdapter.BeforeStoriesHandler() {
+                        @Override
+                        public void getBeforeStories(String date) {
+                            commonUtil.promtMsg("get before News Date is " + date);
+                            newsService.getBeforeNews(date, handler);
+                        }
+                    });
+                    storyListView.setAdapter(storiesListAdapter);
                     commonUtil.promtMsg("Download Daily news Success!");
                     break;
                 case Constant.DOWNLOAD_NEWS_DETAIL_SUCCESS:
@@ -133,6 +142,7 @@ public class MainActivity extends BaseActivity {
 
                 case Constant.DOWNLOAD_BEFORE_NEWS_SUCCESS:
                     DailyNews beforeNews = (DailyNews)message.obj;
+                    storiesListAdapter.addBeforeStoriesList(beforeNews.getStories());
                     commonUtil.promtMsg("Download Before News Success!");
                     break;
                 case Constant.DOWNLOAD_THEME_LIST_SUCCESS:

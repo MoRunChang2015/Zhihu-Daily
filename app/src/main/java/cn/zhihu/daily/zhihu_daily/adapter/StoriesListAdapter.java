@@ -15,6 +15,7 @@ import java.util.List;
 
 import cn.zhihu.daily.zhihu_daily.R;
 import cn.zhihu.daily.zhihu_daily.factory.ImageResponseHandlerFactory;
+import cn.zhihu.daily.zhihu_daily.model.DailyNews;
 import cn.zhihu.daily.zhihu_daily.model.Summary;
 import cn.zhihu.daily.zhihu_daily.ui.activity.StoryDetailActivity;
 import cn.zhihu.daily.zhihu_daily.util.NetworkUtil;
@@ -27,17 +28,31 @@ public class StoriesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     private Context context;
     private List<Summary> contentList;
-
+    private Calendar calendar;
     private String[] currentShowingDate = new String[3];
 
     private static final int TYPE_ITEM = 1;
     private static final int TYPE_DATE = 2;
+    private BeforeStoriesHandler beforeStoriesHandler;
 
-    public StoriesListAdapter(Context context, List<Summary> contentList) {
+    public void addBeforeStoriesList(List<Summary> list) {
+        contentList.addAll(list);
+        notifyDataSetChanged();
+    }
+
+    public interface BeforeStoriesHandler {
+        void getBeforeStories(String date);
+    }
+
+    public StoriesListAdapter(Context context, List<Summary> contentList, BeforeStoriesHandler beforeStoriesHandler) {
         this.contentList = contentList;
         this.context = context;
+        this.beforeStoriesHandler = beforeStoriesHandler;
+        calendar = Calendar.getInstance();
+        getCurrentShowingDate();
+    }
 
-        Calendar calendar = Calendar.getInstance();
+    private void getCurrentShowingDate() {
         currentShowingDate[0] = Integer.toString(calendar.get(Calendar.YEAR));
         currentShowingDate[1] = Integer.toString(calendar.get(Calendar.MONTH) + 1);
         currentShowingDate[2] = Integer.toString(calendar.get(Calendar.DATE));
@@ -78,11 +93,11 @@ public class StoriesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         ImageResponseHandlerFactory.createHandler(itemViewHolder.imageView, item));
             }
             if (position == contentList.size() - 1) {
-//                internetAccess.getPreviousNews(currentShowingDate[0] +
-//                                currentShowingDate[1] +
-//                                currentShowingDate[2],
-//                        contentList);
+                beforeStoriesHandler.getBeforeStories(currentShowingDate[0] + currentShowingDate[1]
+                                                      + currentShowingDate[2]);
                 Summary dateSummary = new Summary();
+                calendar.add(Calendar.DATE, -1);
+                getCurrentShowingDate();
                 dateSummary.setDate(currentShowingDate[0] + "年" +
                         currentShowingDate[1] + "月" +
                         currentShowingDate[2] + "日的大新闻");
