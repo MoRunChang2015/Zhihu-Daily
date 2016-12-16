@@ -5,4 +5,8 @@
     <color name="colorAccent">#66BB6A</color>
     <color name="mainActivityBackground">#f2f2f2</color>
     <color name="storyItemBorder">#ffffff</color>
+
+    <color name="sideMenuColor">#1e1e1e</color>
+    <color name="sideMenuSelectedColor">#0d0d0d</color>
+    <color name="sideMenuBorderColor">#878787</color>
 </resources>

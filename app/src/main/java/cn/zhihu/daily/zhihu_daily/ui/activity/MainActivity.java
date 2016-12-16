@@ -98,7 +98,7 @@ public class MainActivity extends BaseActivity {
         }
         topStoriesFragment = (TopStoriesFragment)getFragmentManager().
                 findFragmentById(R.id.top_story_fragment);
-        storyListView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+        storyListView.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayoutManager.VERTICAL, false));
     }
 
     private ServiceConnection sc =  new ServiceConnection() {

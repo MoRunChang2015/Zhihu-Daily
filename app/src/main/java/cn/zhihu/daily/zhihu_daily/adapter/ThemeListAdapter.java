@@ -66,10 +66,12 @@ public class ThemeListAdapter extends RecyclerView.Adapter<ThemeListAdapter.View
         }
         if (data.get(position).getId() == currentThemeId) {
             ((LinearLayout) holder.textView.getParent()).setBackgroundColor(
-                    ContextCompat.getColor(context, R.color.colorPrimaryDark));
+                    ContextCompat.getColor(context, R.color.sideMenuSelectedColor));
+            holder.textView.setTextColor(Color.WHITE);
         } else {
             ((LinearLayout) holder.textView.getParent()).setBackgroundColor(
-                    ContextCompat.getColor(context, R.color.colorPrimary));
+                    ContextCompat.getColor(context, R.color.sideMenuColor));
+            holder.textView.setTextColor(ContextCompat.getColor(context, R.color.sideMenuBorderColor));
         }
 
     }
