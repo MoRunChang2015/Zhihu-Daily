@@ -26,6 +26,7 @@ public class ImageResponseHandlerFactory {
                 Bitmap imageBitmap = BitmapFactory.decodeByteArray(binaryData, 0, binaryData.length);
                 if (imageBitmap.getHeight() > 600) {
                     imageBitmap = Bitmap.createBitmap(imageBitmap, 0, 0, imageBitmap.getWidth(), 550);
+                    Log.i("Get Image", "");
                 }
                 imageContainer.setImageBitmap(imageBitmap);
                 if (bitmapContainer != null) {

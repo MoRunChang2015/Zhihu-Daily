@@ -7,28 +7,16 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
-import android.sax.RootElement;
-import android.util.Log;
 import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-
 import butterknife.BindView;
 import cn.zhihu.daily.zhihu_daily.R;
-import cn.zhihu.daily.zhihu_daily.adapter.StoriesListAdapter;
 import cn.zhihu.daily.zhihu_daily.base.BaseActivity;
 import cn.zhihu.daily.zhihu_daily.constant.Constant;
 import cn.zhihu.daily.zhihu_daily.factory.ImageResponseHandlerFactory;
-import cn.zhihu.daily.zhihu_daily.factory.JsonResponseHandlerFactory;
-import cn.zhihu.daily.zhihu_daily.model.DailyNews;
 import cn.zhihu.daily.zhihu_daily.model.Detail;
-import cn.zhihu.daily.zhihu_daily.model.TopStory;
 import cn.zhihu.daily.zhihu_daily.service.NewsService;
 import cn.zhihu.daily.zhihu_daily.util.CommonUtil;
 import cn.zhihu.daily.zhihu_daily.util.NetworkUtil;
@@ -96,7 +84,7 @@ public class StoryDetailActivity extends BaseActivity {
                     NetworkUtil.getImage(detail.getImage(),
                             ImageResponseHandlerFactory.createHandler(imageView, detail));
                     setWebContent(detail);
-                    commonUtil.promtMsg("Download news Detail Success");
+                    commonUtil.promptMsg("Download news Detail Success");
                     break;
                 default:
                     break;

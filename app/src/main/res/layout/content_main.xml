@@ -1,39 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="55dp"
-    android:background="@color/mainActivityBackground">
-    <LinearLayout
-        android:id="@+id/content_main"
+    android:background="@color/mainActivityBackground"
+    tools:context="cn.zhihu.daily.zhihu_daily.ui.activity.MainActivity"
+    android:orientation="vertical">
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/story_list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:context="cn.zhihu.daily.zhihu_daily.ui.activity.MainActivity"
-        tools:showIn="@layout/app_bar_main"
-        android:orientation="vertical">
-
-        <fragment
-            android:id="@+id/top_story_fragment"
-            android:name="cn.zhihu.daily.zhihu_daily.ui.view.TopStoriesFragment"
-            android:layout_width="match_parent"
-            android:layout_height="265dp"
-            tools:layout="@layout/top_story_item" />
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/story_list"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_marginTop="6dp"
-            android:layout_marginStart="6dp"
-            android:layout_marginEnd="6dp"
-            android:scrollbars="none"
-            android:nestedScrollingEnabled="false"/>
-
-    </LinearLayout>
-</android.support.v4.widget.NestedScrollView>
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:scrollbars="none"/>
+</LinearLayout>

@@ -1,16 +1,9 @@
 package cn.zhihu.daily.zhihu_daily.ui.activity;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
 import android.view.View;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -27,18 +20,19 @@ import android.os.Message;
 import android.util.Log;
 
 import butterknife.BindView;
+import cn.zhihu.daily.zhihu_daily.Interface.OnListMovedToEnd;
 import cn.zhihu.daily.zhihu_daily.R;
 import cn.zhihu.daily.zhihu_daily.adapter.StoriesListAdapter;
 import cn.zhihu.daily.zhihu_daily.base.BaseActivity;
 import cn.zhihu.daily.zhihu_daily.constant.Constant;
 import cn.zhihu.daily.zhihu_daily.model.DailyNews;
-import cn.zhihu.daily.zhihu_daily.model.Detail;
+import cn.zhihu.daily.zhihu_daily.model.Summary;
 import cn.zhihu.daily.zhihu_daily.model.Theme;
 import cn.zhihu.daily.zhihu_daily.model.ThemeList;
 import cn.zhihu.daily.zhihu_daily.model.ThemeNews;
 import cn.zhihu.daily.zhihu_daily.service.NewsService;
-import cn.zhihu.daily.zhihu_daily.ui.view.ThemeListFragment;
-import cn.zhihu.daily.zhihu_daily.ui.view.TopStoriesFragment;
+import cn.zhihu.daily.zhihu_daily.ui.fragment.ContentMainFragment;
+import cn.zhihu.daily.zhihu_daily.ui.fragment.ThemeListFragment;
 import cn.zhihu.daily.zhihu_daily.util.CommonUtil;
 import cn.zhihu.daily.zhihu_daily.util.NetworkUtil;
 
@@ -48,11 +42,9 @@ public class MainActivity extends BaseActivity {
     CommonUtil commonUtil;
     private NewsService newsService;
 
-    TopStoriesFragment topStoriesFragment;
+    ContentMainFragment contentMainFragment;
     StoriesListAdapter storiesListAdapter;
 
-    @BindView(R.id.story_list)
-    RecyclerView storyListView;
 
     @BindView(R.id.fab)
     FloatingActionButton fab;
@@ -92,14 +84,20 @@ public class MainActivity extends BaseActivity {
         commonUtil = new CommonUtil(fab);
 
         if (!NetworkUtil.isNetworkAvailable(this))
-            commonUtil.promtMsg("Network is not available");
+            commonUtil.promptMsg("Network is not available");
         else {
             Intent intent = new Intent(MainActivity.this, NewsService.class);
             bindService(intent, sc, BIND_AUTO_CREATE);
         }
-        topStoriesFragment = (TopStoriesFragment)getFragmentManager().
-                findFragmentById(R.id.top_story_fragment);
-        storyListView.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayoutManager.VERTICAL, false));
+        contentMainFragment = (ContentMainFragment)getFragmentManager().
+                findFragmentById(R.id.content_main);
+        contentMainFragment.setOnListMovedToEndListener(new OnListMovedToEnd() {
+            @Override
+            public void onEnd(String date) {
+                newsService.getBeforeNews(date, handler);
+                commonUtil.promptMsg("Get news: " + date);
+            }
+        });
     }
 
     private ServiceConnection sc =  new ServiceConnection() {
@@ -123,46 +121,35 @@ public class MainActivity extends BaseActivity {
             switch (message.what) {
                 case Constant.DOWNLOAD_LATEST_NEWS_SUCCESS:
                     DailyNews dailyNews = (DailyNews)message.obj;
-                    topStoriesFragment.setContent(MainActivity.this, dailyNews.getTop_stories());
-                    storiesListAdapter = new StoriesListAdapter(MainActivity.this,
-                            dailyNews.getStories(), new StoriesListAdapter.BeforeStoriesHandler() {
-                        @Override
-                        public void getBeforeStories(String date) {
-                            commonUtil.promtMsg("get before News Date is " + date);
-                            newsService.getBeforeNews(date, handler);
-                        }
-                    });
-                    storyListView.setAdapter(storiesListAdapter);
-                    commonUtil.promtMsg("Download Daily news Success!");
+                    contentMainFragment.setDailyNews(dailyNews);
                     break;
-                case Constant.DOWNLOAD_NEWS_DETAIL_SUCCESS:
-                    Detail detail = (Detail)message.obj;
-                    commonUtil.promtMsg("Download news Detail Success");
-                    break;
-
                 case Constant.DOWNLOAD_BEFORE_NEWS_SUCCESS:
                     DailyNews beforeNews = (DailyNews)message.obj;
-                    storiesListAdapter.addBeforeStoriesList(beforeNews.getStories());
-                    commonUtil.promtMsg("Download Before News Success!");
+                    String date = beforeNews.getDate();
+                    Summary dateSummary = new Summary();
+                    dateSummary.setDate(date.substring(0, 4) + "年" +
+                            date.substring(4, 6)+ "月" +
+                            date.substring(6)+ "日的大新闻");
+                    beforeNews.getStories().add(0, dateSummary);
+                    contentMainFragment.addSummary(beforeNews.getStories());
                     break;
                 case Constant.DOWNLOAD_THEME_LIST_SUCCESS:
                     ThemeList themeList = (ThemeList)message.obj;
                     setNavigation(themeList);
-                    commonUtil.promtMsg("Download Theme List Success!");
                     break;
                 case Constant.DOWNLOAD_THEME_NEWS_SUCCESS:
                     ThemeNews themeNews = (ThemeNews)message.obj;
                     Log.d(tag, themeNews.getDescription());
-                    commonUtil.promtMsg("Download Theme News Success!");
+                    commonUtil.promptMsg("Download Theme News Success!");
                     break;
                 case Constant.NETWORK_ERROR:
-                    commonUtil.promtMsg("Network Error");
+                    commonUtil.promptMsg("Network Error");
                     break;
 
                 case Constant.THEME_CHANGE:
                     drawer.closeDrawers();
                     Theme theme = (Theme) message.obj;
-                    commonUtil.promtMsg("theme name is " + theme.getName());
+                    commonUtil.promptMsg("theme name is " + theme.getName());
                     break;
                 default:
                     break;

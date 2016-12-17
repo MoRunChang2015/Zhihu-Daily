@@ -1,6 +1,5 @@
-package cn.zhihu.daily.zhihu_daily.ui.view;
+package cn.zhihu.daily.zhihu_daily.ui.fragment;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.os.Handler;
@@ -11,8 +10,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
 
 import java.util.List;
 
@@ -21,7 +18,6 @@ import cn.zhihu.daily.zhihu_daily.adapter.ThemeListAdapter;
 import cn.zhihu.daily.zhihu_daily.constant.Constant;
 import cn.zhihu.daily.zhihu_daily.model.Theme;
 import cn.zhihu.daily.zhihu_daily.model.ThemeList;
-import cn.zhihu.daily.zhihu_daily.ui.activity.MainActivity;
 
 public class ThemeListFragment extends Fragment {
     private RecyclerView themeRecyclerView;

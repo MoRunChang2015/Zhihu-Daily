@@ -11,6 +11,5 @@
         android:background="@drawable/top_story_text_background" />
     <TextView
         android:id="@+id/title"
-        android:text="Test"
         style="@style/titleStyle"/>
 </FrameLayout>

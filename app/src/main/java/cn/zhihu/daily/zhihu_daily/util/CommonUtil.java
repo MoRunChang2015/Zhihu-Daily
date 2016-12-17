@@ -20,7 +20,7 @@ public class CommonUtil {
         this.rootView = rootView;
     }
 
-    public void promtMsg(String text) {
+    public void promptMsg(String text) {
         Snackbar.make(rootView, text, Snackbar.LENGTH_SHORT).show();
     }
 
