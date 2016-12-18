@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,6 +49,22 @@ public class ContentMainFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         contentList = (RecyclerView) getActivity().findViewById(R.id.story_list);
         contentList.setLayoutManager(new LinearLayoutManager(getContext()));
+        contentList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            int scrollingDirection = 0;
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy > 0 && scrollingDirection != 1) {
+                    scrollingDirection = StoriesListAdapter.SCROLL_UP;
+                    contentListAdapter.setScrollingState(scrollingDirection);
+                    Log.i("Scrolling state", scrollingDirection > 0 ? "up" : "down");
+                } else if (dy < 0 && scrollingDirection != -1) {
+                    scrollingDirection = StoriesListAdapter.SCROLL_DOWN;
+                    contentListAdapter.setScrollingState(scrollingDirection);
+                    Log.i("Scrolling state", scrollingDirection > 0 ? "up" : "down");
+                }
+            }
+        });
         topStoriesViewPager = new ViewPagerWithIndicator(getContext());
     }
 

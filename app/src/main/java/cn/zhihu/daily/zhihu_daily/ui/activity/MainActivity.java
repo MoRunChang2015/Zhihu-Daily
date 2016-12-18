@@ -121,6 +121,7 @@ public class MainActivity extends BaseActivity {
             switch (message.what) {
                 case Constant.DOWNLOAD_LATEST_NEWS_SUCCESS:
                     DailyNews dailyNews = (DailyNews)message.obj;
+                    dailyNews.getStories().add(0, new Summary());
                     contentMainFragment.setDailyNews(dailyNews);
                     break;
                 case Constant.DOWNLOAD_BEFORE_NEWS_SUCCESS:
