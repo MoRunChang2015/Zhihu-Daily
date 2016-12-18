@@ -37,9 +37,11 @@ public class StoriesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private static final int TYPE_TOP_STORY = 0;
     private static final int TYPE_ITEM = 1;
     private static final int TYPE_DATE = 2;
+    private boolean isLoading = false;
     private OnListMovedToEnd onListMovedToEnd;
 
     public void addBeforeStoriesList(List<Summary> list) {
+        isLoading = false;
         contentList.addAll(list);
         notifyDataSetChanged();
     }
@@ -103,7 +105,8 @@ public class StoriesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 NetworkUtil.getImage(item.getImages().get(0),
                         ImageResponseHandlerFactory.createHandler(itemViewHolder.imageView, item));
             }
-//            if (position == contentList.size() - 3) {
+//            if (position == contentList.size() - 3 && isLoading == false) {
+//                isLoading = true;
 //                beforeStoriesHandler.getBeforeStories(currentShowingDate);
 //            }
         } else if (holder.getItemViewType() == TYPE_DATE) {

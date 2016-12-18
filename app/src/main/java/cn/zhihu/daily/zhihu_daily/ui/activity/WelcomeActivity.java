@@ -1,16 +1,12 @@
 package cn.zhihu.daily.zhihu_daily.ui.activity;
 
 import android.content.Intent;
-import android.media.Image;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import butterknife.BindView;
 import cn.zhihu.daily.zhihu_daily.R;

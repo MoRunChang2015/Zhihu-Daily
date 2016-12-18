@@ -22,7 +22,6 @@ import android.util.Log;
 import butterknife.BindView;
 import cn.zhihu.daily.zhihu_daily.Interface.OnListMovedToEnd;
 import cn.zhihu.daily.zhihu_daily.R;
-import cn.zhihu.daily.zhihu_daily.adapter.StoriesListAdapter;
 import cn.zhihu.daily.zhihu_daily.base.BaseActivity;
 import cn.zhihu.daily.zhihu_daily.constant.Constant;
 import cn.zhihu.daily.zhihu_daily.model.DailyNews;
@@ -43,7 +42,6 @@ public class MainActivity extends BaseActivity {
     private NewsService newsService;
 
     ContentMainFragment contentMainFragment;
-    StoriesListAdapter storiesListAdapter;
 
 
     @BindView(R.id.fab)
