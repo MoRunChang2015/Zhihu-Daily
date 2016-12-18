@@ -22,6 +22,8 @@ public interface Constant {
 
     int NETWORK_ERROR = -1;
 
+    int JSON_PARSE_ERROR = -2;
+
     int DOWNLOAD_LATEST_NEWS_SUCCESS = 1;
 
     int DOWNLOAD_NEWS_DETAIL_SUCCESS = 2;
@@ -34,5 +36,7 @@ public interface Constant {
 
     int THEME_CHANGE = 6;
 
-    int THEME_HOME_ID = -2;
+    int THEME_HOME_ID = 0;
+
+    int ITEM_DATE_TYPE = 7;
 }

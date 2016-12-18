@@ -10,11 +10,16 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
-import cn.zhihu.daily.zhihu_daily.Interface.OnListMovedToEnd;
+import cn.zhihu.daily.zhihu_daily.Interface.ExtendStoriesListHandler;
+import cn.zhihu.daily.zhihu_daily.Interface.OnScrollingStateChanged;
 import cn.zhihu.daily.zhihu_daily.R;
+import cn.zhihu.daily.zhihu_daily.constant.Constant;
 import cn.zhihu.daily.zhihu_daily.factory.ImageResponseHandlerFactory;
 import cn.zhihu.daily.zhihu_daily.model.Summary;
 import cn.zhihu.daily.zhihu_daily.ui.activity.StoryDetailActivity;
@@ -27,18 +32,23 @@ import cn.zhihu.daily.zhihu_daily.util.NetworkUtil;
 
 public class StoriesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private Context context;
-    private List<Summary> contentList;
-    private Calendar calendar;
-
-    private String currentShowingDate;
-    private ViewPagerWithIndicator topStores;
-
     private static final int TYPE_TOP_STORY = 0;
     private static final int TYPE_ITEM = 1;
     private static final int TYPE_DATE = 2;
-    private boolean isLoading = false;
-    private OnListMovedToEnd onListMovedToEnd;
+    private static Calendar today;
+
+    public static final int SCROLL_UP = 1;
+    public static final int SCROLL_DOWN = -1;
+
+
+    private Context context;
+    private List<Summary> contentList;
+    private Calendar calendar = Calendar.getInstance();
+
+    private Boolean isLoading = false;
+    private ViewPagerWithIndicator topStores;
+    private ExtendStoriesListHandler extendStoriesListHandler;
+
 
     public void addBeforeStoriesList(List<Summary> list) {
         isLoading = false;
@@ -46,22 +56,47 @@ public class StoriesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         notifyDataSetChanged();
     }
 
-    public String getCurrentShowingDate() {
-        return currentShowingDate;
+    private String getCurrentShowingDate() {
+        if (calendar.before(today))
+            return Integer.toString(calendar.get(Calendar.MONTH) + 1) + "月" +
+                    Integer.toString(calendar.get(Calendar.DATE)) + "日";
+        else
+            return "今日";
     }
 
-    public void setCurrentShowingDate(String currentShowingDate) {
-        this.currentShowingDate = currentShowingDate;
+    private String getCurrentFormatDate() {
+        return Integer.toString(calendar.get(Calendar.YEAR)) +
+                (calendar.get(Calendar.MONTH) + 1 < 10 ? "0":"") +
+                Integer.toString(calendar.get(Calendar.MONTH) + 1) +
+                (calendar.get(Calendar.DATE) < 10 ? "0":"") +
+                Integer.toString(calendar.get(Calendar.DATE));
     }
+
+    private String FormatDateToShowingDate(String date) {
+        return date.substring(0, 4) + "年" +
+                Integer.toString(Integer.parseInt(date.substring(4, 6))) + "月" +
+                Integer.toString(Integer.parseInt(date.substring(6, 8))) + "日";
+    }
+
+    private Calendar formatDateToCalendar(String date) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
+        Calendar calendar = Calendar.getInstance();
+        try {
+            calendar.setTime(simpleDateFormat.parse(date));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return calendar;
+    }
+
 
     public StoriesListAdapter(Context context, ViewPagerWithIndicator topStores,
-                              List<Summary> contentList, OnListMovedToEnd onListMovedToEnd) {
+                              List<Summary> contentList, ExtendStoriesListHandler extendStoriesListHandler) {
         this.topStores = topStores;
         this.contentList = contentList;
         this.context = context;
-        this.onListMovedToEnd= onListMovedToEnd;
-        calendar = Calendar.getInstance();
-        getCurrentShowingDate();
+        this.extendStoriesListHandler = extendStoriesListHandler;
+        today = formatDateToCalendar(contentList.get(0).getDate());
     }
 
 
@@ -70,10 +105,10 @@ public class StoriesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         if (position == 0) {
             return TYPE_TOP_STORY;
         }
-        if (contentList.get(position).getDate() == null) {
-            return TYPE_ITEM;
-        } else {
+        if (contentList.get(position).getType() == Constant.ITEM_DATE_TYPE) {
             return TYPE_DATE;
+        } else {
+            return TYPE_ITEM;
         }
     }
 
@@ -92,26 +127,41 @@ public class StoriesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     }
 
+    private void checkDateChange() {
+        int firstPosition = extendStoriesListHandler.getFirstVisibleItemPosition();
+        if (firstPosition == -1)
+            return;
+        if (contentList.get(firstPosition).getDate() != null) {
+            Calendar temp = formatDateToCalendar(contentList.get(firstPosition).getDate());
+            if (calendar.before(temp) || calendar.after(temp)) {
+                calendar.setTime(temp.getTime());
+                extendStoriesListHandler.onDateChange(getCurrentShowingDate());
+            }
+        }
+    }
+
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
         Summary item = contentList.get(position);
         if (holder.getItemViewType() == TYPE_ITEM) {
             StoryListItemViewHolder itemViewHolder = (StoryListItemViewHolder) holder;
             itemViewHolder.textView.setText(item.getTitle());
-            itemViewHolder.id = contentList.get(position).getId();
+            itemViewHolder.id = item.getId();
             if (item.getBitmap() != null) {
                 itemViewHolder.imageView.setImageBitmap(item.getBitmap());
             } else {
                 NetworkUtil.getImage(item.getImages().get(0),
                         ImageResponseHandlerFactory.createHandler(itemViewHolder.imageView, item));
             }
-//            if (position == contentList.size() - 3 && isLoading == false) {
-//                isLoading = true;
-//                beforeStoriesHandler.getBeforeStories(currentShowingDate);
-//            }
+            if (contentList.size() - 1 == position && !isLoading) {
+                isLoading = true;
+                extendStoriesListHandler.onEnd(getCurrentFormatDate());
+            }
+            checkDateChange();
         } else if (holder.getItemViewType() == TYPE_DATE) {
             StoryListDateViewHolder dateViewHolder = (StoryListDateViewHolder)holder;
-            dateViewHolder.textView.setText(item.getDate());
+            String showingText = FormatDateToShowingDate(item.getDate()) + "的大新闻";
+            dateViewHolder.textView.setText(showingText);
         }
     }
 
@@ -119,7 +169,6 @@ public class StoriesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public int getItemCount() {
         return contentList.size();
     }
-
 }
 
 class TopStoriesViewHolder extends RecyclerView.ViewHolder {

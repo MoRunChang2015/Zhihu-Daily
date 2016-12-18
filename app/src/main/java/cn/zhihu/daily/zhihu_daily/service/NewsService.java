@@ -45,7 +45,7 @@ public class NewsService extends Service {
 
     public void getDailyNews(final Handler handler) {
         NetworkUtil.getLatestNews(JsonResponseHandlerFactory.createHandler(DailyNews.class, handler,
-                Constant.DOWNLOAD_LATEST_NEWS_SUCCESS, Constant.NETWORK_ERROR));
+                Constant.DOWNLOAD_LATEST_NEWS_SUCCESS, Constant.NETWORK_ERROR, Constant.JSON_PARSE_ERROR));
     }
 
 
@@ -76,23 +76,23 @@ public class NewsService extends Service {
 
     public void getNewsDetail(int id, final Handler handler) {
         NetworkUtil.getNewsDetail(id, JsonResponseHandlerFactory.createHandler(Detail.class, handler,
-                Constant.DOWNLOAD_NEWS_DETAIL_SUCCESS, Constant.NETWORK_ERROR));
+                Constant.DOWNLOAD_NEWS_DETAIL_SUCCESS, Constant.NETWORK_ERROR, Constant.JSON_PARSE_ERROR));
     }
 
     public void getBeforeNews(String date, final Handler handler) {
         NetworkUtil.getBeforeNews(date, JsonResponseHandlerFactory.createHandler(DailyNews.class, handler,
-                Constant.DOWNLOAD_BEFORE_NEWS_SUCCESS, Constant.NETWORK_ERROR));
+                Constant.DOWNLOAD_BEFORE_NEWS_SUCCESS, Constant.NETWORK_ERROR, Constant.JSON_PARSE_ERROR));
     }
 
 
     public void getThemeList(final Handler handler) {
         NetworkUtil.getThemeList(JsonResponseHandlerFactory.createHandler(ThemeList.class, handler,
-                Constant.DOWNLOAD_THEME_LIST_SUCCESS, Constant.NETWORK_ERROR));
+                Constant.DOWNLOAD_THEME_LIST_SUCCESS, Constant.NETWORK_ERROR, Constant.JSON_PARSE_ERROR));
     }
 
     public void getThemeNews(int id, final Handler handler) {
         NetworkUtil.getThemeNews(id, JsonResponseHandlerFactory.createHandler(ThemeNews.class, handler,
-                Constant.DOWNLOAD_THEME_NEWS_SUCCESS, Constant.NETWORK_ERROR));
+                Constant.DOWNLOAD_THEME_NEWS_SUCCESS, Constant.NETWORK_ERROR, Constant.JSON_PARSE_ERROR));
     }
 
 

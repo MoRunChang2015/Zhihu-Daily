@@ -20,7 +20,7 @@ import android.os.Message;
 import android.util.Log;
 
 import butterknife.BindView;
-import cn.zhihu.daily.zhihu_daily.Interface.OnListMovedToEnd;
+import cn.zhihu.daily.zhihu_daily.Interface.StoriesListHandler;
 import cn.zhihu.daily.zhihu_daily.R;
 import cn.zhihu.daily.zhihu_daily.base.BaseActivity;
 import cn.zhihu.daily.zhihu_daily.constant.Constant;
@@ -50,12 +50,13 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.drawer_layout)
     DrawerLayout drawer;
 
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         fab.setOnClickListener(new View.OnClickListener() {
@@ -89,11 +90,17 @@ public class MainActivity extends BaseActivity {
         }
         contentMainFragment = (ContentMainFragment)getFragmentManager().
                 findFragmentById(R.id.content_main);
-        contentMainFragment.setOnListMovedToEndListener(new OnListMovedToEnd() {
+        contentMainFragment.setOnListMovedToEndListener(new StoriesListHandler() {
             @Override
             public void onEnd(String date) {
                 newsService.getBeforeNews(date, handler);
+                Log.d(tag, "Get news: " + date);
                 commonUtil.promptMsg("Get news: " + date);
+            }
+
+            @Override
+            public void onDateChange(String date) {
+                toolbar.setTitle(date + "的大新闻");
             }
         });
     }
@@ -119,16 +126,20 @@ public class MainActivity extends BaseActivity {
             switch (message.what) {
                 case Constant.DOWNLOAD_LATEST_NEWS_SUCCESS:
                     DailyNews dailyNews = (DailyNews)message.obj;
+                    dailyNews.getStories().add(0, new Summary());
+                    for (Summary summary: dailyNews.getStories()) {
+                        summary.setDate(dailyNews.getDate());
+                    }
                     contentMainFragment.setDailyNews(dailyNews);
                     break;
                 case Constant.DOWNLOAD_BEFORE_NEWS_SUCCESS:
                     DailyNews beforeNews = (DailyNews)message.obj;
-                    String date = beforeNews.getDate();
                     Summary dateSummary = new Summary();
-                    dateSummary.setDate(date.substring(0, 4) + "年" +
-                            date.substring(4, 6)+ "月" +
-                            date.substring(6)+ "日的大新闻");
+                    dateSummary.setType(Constant.ITEM_DATE_TYPE);
                     beforeNews.getStories().add(0, dateSummary);
+                    for (Summary summary: beforeNews.getStories()) {
+                        summary.setDate(beforeNews.getDate());
+                    }
                     contentMainFragment.addSummary(beforeNews.getStories());
                     break;
                 case Constant.DOWNLOAD_THEME_LIST_SUCCESS:
@@ -144,6 +155,9 @@ public class MainActivity extends BaseActivity {
                     commonUtil.promptMsg("Network Error");
                     break;
 
+                case Constant.JSON_PARSE_ERROR:
+                    commonUtil.promptMsg("Json Parse Error");
+                    break;
                 case Constant.THEME_CHANGE:
                     drawer.closeDrawers();
                     Theme theme = (Theme) message.obj;
@@ -154,6 +168,12 @@ public class MainActivity extends BaseActivity {
             }
         }
     };
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        unbindService(sc);
+    }
 
     @Override
     public void onBackPressed() {

@@ -13,7 +13,7 @@ import cz.msebera.android.httpclient.Header;
  */
 
 public class JsonResponseHandlerFactory {
-    static public <T> TextHttpResponseHandler createHandler(final Class<T> className, final Handler handler, final int SUCCESS_CODE, final int FAIL_CODE) {
+    static public <T> TextHttpResponseHandler createHandler(final Class<T> className, final Handler handler, final int SUCCESS_CODE, final int FAIL_CODE, final int JSON_PARSE_ERROR) {
         return new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
@@ -30,7 +30,7 @@ public class JsonResponseHandlerFactory {
                 } catch (JSONException e) {
                     e.printStackTrace();
                     Message msg = new Message();
-                    msg.what = FAIL_CODE;
+                    msg.what = JSON_PARSE_ERROR;
                     handler.sendMessage(msg);
                     return;
                 }

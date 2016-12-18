@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +16,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.zhihu.daily.zhihu_daily.Interface.OnListMovedToEnd;
+import cn.zhihu.daily.zhihu_daily.Interface.ExtendStoriesListHandler;
+import cn.zhihu.daily.zhihu_daily.Interface.StoriesListHandler;
 import cn.zhihu.daily.zhihu_daily.R;
 import cn.zhihu.daily.zhihu_daily.adapter.StoriesListAdapter;
 import cn.zhihu.daily.zhihu_daily.adapter.TopStoriesAdapter;
@@ -35,7 +37,8 @@ public class ContentMainFragment extends Fragment {
     ViewPagerWithIndicator topStoriesViewPager;
     RecyclerView contentList;
     StoriesListAdapter contentListAdapter;
-    OnListMovedToEnd listener;
+    StoriesListHandler listener;
+    private LinearLayoutManager linearLayoutManager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -47,16 +50,17 @@ public class ContentMainFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         contentList = (RecyclerView) getActivity().findViewById(R.id.story_list);
-        contentList.setLayoutManager(new LinearLayoutManager(getContext()));
+        linearLayoutManager = new LinearLayoutManager(getContext());
+        contentList.setLayoutManager(linearLayoutManager);
         topStoriesViewPager = new ViewPagerWithIndicator(getContext());
     }
 
-    public void setOnListMovedToEndListener(OnListMovedToEnd listener) {
+    public void setOnListMovedToEndListener(StoriesListHandler listener) {
         this.listener = listener;
     }
 
     public void setTopStory(List<TopStory> topStoryList) {
-
+        //
     }
 
     public void addSummary(List<Summary> summaryList) {
@@ -85,7 +89,22 @@ public class ContentMainFragment extends Fragment {
         PagerAdapter topStoriesAdapter = new TopStoriesAdapter(topStoryList);
         topStoriesViewPager.setAdapter(topStoriesAdapter);
         contentListAdapter = new StoriesListAdapter(
-                getContext(), topStoriesViewPager, dailyNews.getStories(), listener);
+                getContext(), topStoriesViewPager, dailyNews.getStories(), new ExtendStoriesListHandler() {
+            @Override
+            public int getFirstVisibleItemPosition() {
+                return linearLayoutManager.findFirstCompletelyVisibleItemPosition();
+            }
+
+            @Override
+            public void onEnd(String date) {
+                listener.onEnd(date);
+            }
+
+            @Override
+            public void onDateChange(String date) {
+                listener.onDateChange(date);
+            }
+        });
         contentList.setAdapter(contentListAdapter);
 
     }
