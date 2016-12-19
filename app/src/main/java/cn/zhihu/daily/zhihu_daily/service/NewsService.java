@@ -81,7 +81,7 @@ public class NewsService extends Service {
 
     public void getBeforeNews(String date, final Handler handler) {
         NetworkUtil.getBeforeNews(date, JsonResponseHandlerFactory.createHandler(DailyNews.class, handler,
-                Constant.DOWNLOAD_BEFORE_NEWS_SUCCESS, Constant.NETWORK_ERROR, Constant.JSON_PARSE_ERROR));
+                Constant.DOWNLOAD_BEFORE_NEWS_SUCCESS, Constant.NETWORK_ERROR_NEED_RETRY, Constant.JSON_PARSE_ERROR));
     }
 
 

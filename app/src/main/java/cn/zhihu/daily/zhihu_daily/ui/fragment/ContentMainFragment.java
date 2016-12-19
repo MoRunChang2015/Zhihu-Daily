@@ -3,6 +3,7 @@ package cn.zhihu.daily.zhihu_daily.ui.fragment;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -66,6 +67,25 @@ public class ContentMainFragment extends Fragment {
     public void addSummary(List<Summary> summaryList) {
         contentListAdapter.addBeforeStoriesList(summaryList);
     }
+
+    public void getBeforeStoriesFail() {
+        contentListAdapter.getBeforeStoriesFail();
+    }
+
+    Handler mHandler = new Handler();
+
+    public void scrollToTop() {
+        contentList.smoothScrollToPosition(0);
+        mHandler.postDelayed(runnable, 500);
+    }
+
+    Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            contentList.stopScroll();
+            contentList.scrollToPosition(0);
+        }
+    };
 
     public void setDailyNews(DailyNews dailyNews) {
         LayoutInflater inflater = LayoutInflater.from(getContext());

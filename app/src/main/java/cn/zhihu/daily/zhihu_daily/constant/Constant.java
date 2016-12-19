@@ -24,6 +24,8 @@ public interface Constant {
 
     int JSON_PARSE_ERROR = -2;
 
+    int NETWORK_ERROR_NEED_RETRY = -3;
+
     int DOWNLOAD_LATEST_NEWS_SUCCESS = 1;
 
     int DOWNLOAD_NEWS_DETAIL_SUCCESS = 2;

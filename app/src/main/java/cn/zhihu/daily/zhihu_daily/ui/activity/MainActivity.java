@@ -3,6 +3,9 @@ package cn.zhihu.daily.zhihu_daily.ui.activity;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.view.GestureDetector;
+import android.view.GestureDetector.SimpleOnGestureListener;
+import android.view.MotionEvent;
 import android.view.View;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -58,7 +61,6 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setSupportActionBar(toolbar);
-
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -101,6 +103,22 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onDateChange(String date) {
                 toolbar.setTitle(date + "的大新闻");
+            }
+        });
+
+        final GestureDetector gestureDetector = new GestureDetector(MainActivity.this, new GestureDetector.SimpleOnGestureListener() {
+            @Override
+            public boolean onDoubleTap(MotionEvent event) {
+                contentMainFragment.scrollToTop();
+                return super.onDoubleTap(event);
+            }
+        });
+
+
+        toolbar.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                return gestureDetector.onTouchEvent(motionEvent);
             }
         });
     }
@@ -162,6 +180,10 @@ public class MainActivity extends BaseActivity {
                     drawer.closeDrawers();
                     Theme theme = (Theme) message.obj;
                     commonUtil.promptMsg("theme name is " + theme.getName());
+                    break;
+                case Constant.NETWORK_ERROR_NEED_RETRY:
+                    contentMainFragment.getBeforeStoriesFail();
+                    commonUtil.promptMsg("Network Error...retrying...");
                     break;
                 default:
                     break;

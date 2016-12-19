@@ -2,6 +2,7 @@ package cn.zhihu.daily.zhihu_daily.factory;
 
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
@@ -20,6 +21,7 @@ public class JsonResponseHandlerFactory {
                 Message msg = new Message();
                 msg.what = FAIL_CODE;
                 handler.sendMessage(msg);
+
             }
 
             @Override

@@ -37,15 +37,12 @@ public class StoriesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private static final int TYPE_DATE = 2;
     private static Calendar today;
 
-    public static final int SCROLL_UP = 1;
-    public static final int SCROLL_DOWN = -1;
-
-
     private Context context;
     private List<Summary> contentList;
     private Calendar calendar = Calendar.getInstance();
 
     private Boolean isLoading = false;
+    private String loadingDate;
     private ViewPagerWithIndicator topStores;
     private ExtendStoriesListHandler extendStoriesListHandler;
 
@@ -54,6 +51,11 @@ public class StoriesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         isLoading = false;
         contentList.addAll(list);
         notifyDataSetChanged();
+    }
+
+
+    public void getBeforeStoriesFail() {
+        extendStoriesListHandler.onEnd(loadingDate);
     }
 
     private String getCurrentShowingDate() {
@@ -155,7 +157,8 @@ public class StoriesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             }
             if (contentList.size() - 1 == position && !isLoading) {
                 isLoading = true;
-                extendStoriesListHandler.onEnd(getCurrentFormatDate());
+                loadingDate = getCurrentFormatDate();
+                extendStoriesListHandler.onEnd(loadingDate);
             }
             checkDateChange();
         } else if (holder.getItemViewType() == TYPE_DATE) {
