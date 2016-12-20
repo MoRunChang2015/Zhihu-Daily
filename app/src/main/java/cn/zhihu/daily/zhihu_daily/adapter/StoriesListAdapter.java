@@ -240,7 +240,6 @@ class StoryListItemViewHolder extends RecyclerView.ViewHolder implements BitmapC
     @Override
     public void setBitmap(Bitmap bitmap, int id) {
         if (this.id == id) {
-            Log.d("setting bitmap", Integer.toString(id));
             imageView.setImageBitmap(bitmap);
         }
     }

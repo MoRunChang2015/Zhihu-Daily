@@ -167,7 +167,7 @@ public class MainActivity extends BaseActivity {
                     break;
                 case Constant.DOWNLOAD_THEME_NEWS_SUCCESS:
                     ThemeNews themeNews = (ThemeNews)message.obj;
-                    Log.d(tag, themeNews.getDescription());
+                    contentMainFragment.addThemeNews(themeNews);
                     commonUtil.promptMsg("Download Theme News Success!");
                     break;
                 case Constant.NETWORK_ERROR:
@@ -181,6 +181,13 @@ public class MainActivity extends BaseActivity {
                     drawer.closeDrawers();
                     Theme theme = (Theme) message.obj;
                     commonUtil.promptMsg("theme name is " + theme.getName());
+                    contentMainFragment.changeTheme(theme.getId());
+                    if (theme.getId() != Constant.THEME_HOME_ID) {
+                        newsService.getThemeNews(theme.getId(), handler);
+                        toolbar.setTitle(theme.getName());
+                    } else {
+                        toolbar.setTitle("首页");
+                    }
                     break;
                 case Constant.NETWORK_ERROR_NEED_RETRY:
                     contentMainFragment.getBeforeStoriesFail();

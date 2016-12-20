@@ -83,23 +83,24 @@ public class StoryDetailActivity extends BaseActivity {
                     Detail detail = (Detail)message.obj;
                     titleTextView.setText(detail.getTitle());
                     imageSourceTextView.setText(detail.getImage_source());
-                    NetworkUtil.getImage(detail.getImage(),
-                            ImageResponseHandlerFactory.createHandler(new BitmapContainer() {
-                                @Override
-                                public void setBitmap(Bitmap bitmap, int id) {
-                                    //do nothing
-                                }
+                    if (detail.getImage() != null)
+                        NetworkUtil.getImage(detail.getImage(),
+                                ImageResponseHandlerFactory.createHandler(new BitmapContainer() {
+                                    @Override
+                                    public void setBitmap(Bitmap bitmap, int id) {
+                                        //do nothing
+                                    }
 
-                                @Override
-                                public void setBitmap(Bitmap bitmap) {
-                                    imageView.setImageBitmap(bitmap);
-                                }
+                                    @Override
+                                    public void setBitmap(Bitmap bitmap) {
+                                        imageView.setImageBitmap(bitmap);
+                                    }
 
-                                @Override
-                                public Bitmap getBitmap() {
-                                    return null;
-                                }
-                            }, detail, null));
+                                    @Override
+                                    public Bitmap getBitmap() {
+                                        return null;
+                                    }
+                                }, detail, null));
                     setWebContent(detail);
                     commonUtil.promptMsg("Download news Detail Success");
                     break;

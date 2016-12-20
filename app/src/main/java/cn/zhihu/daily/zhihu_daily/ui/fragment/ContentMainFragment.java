@@ -22,10 +22,13 @@ import cn.zhihu.daily.zhihu_daily.Interface.ExtendStoriesListHandler;
 import cn.zhihu.daily.zhihu_daily.Interface.StoriesListHandler;
 import cn.zhihu.daily.zhihu_daily.R;
 import cn.zhihu.daily.zhihu_daily.adapter.StoriesListAdapter;
+import cn.zhihu.daily.zhihu_daily.adapter.ThemeStoriesListAdapter;
 import cn.zhihu.daily.zhihu_daily.adapter.TopStoriesAdapter;
+import cn.zhihu.daily.zhihu_daily.constant.Constant;
 import cn.zhihu.daily.zhihu_daily.factory.ImageResponseHandlerFactory;
 import cn.zhihu.daily.zhihu_daily.model.DailyNews;
 import cn.zhihu.daily.zhihu_daily.model.Summary;
+import cn.zhihu.daily.zhihu_daily.model.ThemeNews;
 import cn.zhihu.daily.zhihu_daily.model.TopStory;
 import cn.zhihu.daily.zhihu_daily.ui.activity.StoryDetailActivity;
 import cn.zhihu.daily.zhihu_daily.ui.view.ViewPagerWithIndicator;
@@ -39,6 +42,7 @@ public class ContentMainFragment extends Fragment {
     ViewPagerWithIndicator topStoriesViewPager;
     RecyclerView contentList;
     StoriesListAdapter contentListAdapter;
+    ThemeStoriesListAdapter themeStoriesListAdapter;
     StoriesListHandler listener;
     private LinearLayoutManager linearLayoutManager;
 
@@ -79,16 +83,28 @@ public class ContentMainFragment extends Fragment {
         this.listener = listener;
     }
 
-    public void setTopStory(List<TopStory> topStoryList) {
-        //
-    }
-
     public void addSummary(List<Summary> summaryList) {
         contentListAdapter.addStoriesList(summaryList);
     }
 
     public void getBeforeStoriesFail() {
         contentListAdapter.getBeforeStoriesFail();
+    }
+
+    public void changeTheme(int themeId) {
+        if (themeId == Constant.THEME_HOME_ID) {
+            if (contentList.getAdapter() != contentListAdapter)
+                contentList.setAdapter(contentListAdapter);
+        } else {
+            themeStoriesListAdapter = new ThemeStoriesListAdapter(getContext());
+            contentList.setAdapter(themeStoriesListAdapter);
+        }
+    }
+
+    public void addThemeNews(ThemeNews themeNews) {
+        if (themeStoriesListAdapter != null) {
+            themeStoriesListAdapter.setThemeNewsList(themeNews);
+        }
     }
 
     Handler mHandler = new Handler();
