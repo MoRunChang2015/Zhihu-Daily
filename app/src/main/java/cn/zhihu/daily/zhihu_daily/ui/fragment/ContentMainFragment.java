@@ -2,6 +2,7 @@ package cn.zhihu.daily.zhihu_daily.ui.fragment;
 
 import android.app.Fragment;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.PagerAdapter;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.zhihu.daily.zhihu_daily.Interface.BitmapContainer;
 import cn.zhihu.daily.zhihu_daily.Interface.ExtendStoriesListHandler;
 import cn.zhihu.daily.zhihu_daily.Interface.StoriesListHandler;
 import cn.zhihu.daily.zhihu_daily.R;
@@ -112,7 +114,7 @@ public class ContentMainFragment extends Fragment {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         List<View> topStoryList = new ArrayList<>();
         for (final TopStory topStory: dailyNews.getTop_stories()) {
-            View item = inflater.inflate(R.layout.top_story_item, topStoriesViewPager.getPagesRoot(), false);
+            final View item = inflater.inflate(R.layout.top_story_item, topStoriesViewPager.getPagesRoot(), false);
             item.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -124,7 +126,17 @@ public class ContentMainFragment extends Fragment {
             ((TextView)item.findViewById(R.id.title)).setText(topStory.getTitle());
             NetworkUtil.getImage(topStory.getImage(),
                     ImageResponseHandlerFactory.createHandler(
-                            (ImageView) item.findViewById(R.id.image), null));
+                            new BitmapContainer() {
+                                @Override
+                                public void setBitmap(Bitmap bitmap) {
+                                    ((ImageView) item.findViewById(R.id.image)).setImageBitmap(bitmap);
+                                }
+
+                                @Override
+                                public Bitmap getBitmap() {
+                                    return null;
+                                }
+                            }, null));
             topStoryList.add(item);
         }
         PagerAdapter topStoriesAdapter = new TopStoriesAdapter(topStoryList);

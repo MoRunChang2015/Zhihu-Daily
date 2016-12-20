@@ -3,6 +3,7 @@ package cn.zhihu.daily.zhihu_daily.ui.activity;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -12,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import butterknife.BindView;
+import cn.zhihu.daily.zhihu_daily.Interface.BitmapContainer;
 import cn.zhihu.daily.zhihu_daily.R;
 import cn.zhihu.daily.zhihu_daily.base.BaseActivity;
 import cn.zhihu.daily.zhihu_daily.constant.Constant;
@@ -82,7 +84,17 @@ public class StoryDetailActivity extends BaseActivity {
                     titleTextView.setText(detail.getTitle());
                     imageSourceTextView.setText(detail.getImage_source());
                     NetworkUtil.getImage(detail.getImage(),
-                            ImageResponseHandlerFactory.createHandler(imageView, detail));
+                            ImageResponseHandlerFactory.createHandler(new BitmapContainer() {
+                                @Override
+                                public void setBitmap(Bitmap bitmap) {
+                                    imageView.setImageBitmap(bitmap);
+                                }
+
+                                @Override
+                                public Bitmap getBitmap() {
+                                    return null;
+                                }
+                            }, detail));
                     setWebContent(detail);
                     commonUtil.promptMsg("Download news Detail Success");
                     break;
