@@ -8,8 +8,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.view.View;
+import android.view.ViewGroup;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import butterknife.BindView;
@@ -44,6 +50,9 @@ public class StoryDetailActivity extends BaseActivity {
     @BindView(R.id.detail_content)
     WebView contentDetailWebView;
 
+    @BindView(R.id.activity_story_detail)
+    LinearLayout linearLayout;
+
     @Override
     protected int setLayout() {
         return R.layout.activity_story_detail;
@@ -54,7 +63,7 @@ public class StoryDetailActivity extends BaseActivity {
         commonUtil = new CommonUtil(findViewById(R.id.activity_story_detail));
         Intent intent = new Intent(StoryDetailActivity.this, NewsService.class);
         final int id = getIntent().getIntExtra("Detail", 0);
-
+        linearLayout.setVisibility(View.INVISIBLE);
         sc = new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
@@ -80,10 +89,11 @@ public class StoryDetailActivity extends BaseActivity {
             super.handleMessage(message);
             switch (message.what) {
                 case Constant.DOWNLOAD_NEWS_DETAIL_SUCCESS:
+                    linearLayout.setVisibility(View.VISIBLE);
                     Detail detail = (Detail)message.obj;
                     titleTextView.setText(detail.getTitle());
                     imageSourceTextView.setText(detail.getImage_source());
-                    if (detail.getImage() != null)
+                    if (detail.getImage() != null) {
                         NetworkUtil.getImage(detail.getImage(),
                                 ImageResponseHandlerFactory.createHandler(new BitmapContainer() {
                                     @Override
@@ -101,6 +111,11 @@ public class StoryDetailActivity extends BaseActivity {
                                         return null;
                                     }
                                 }, detail, null));
+                    } else {
+                        FrameLayout frameLayout = (FrameLayout)findViewById(R.id.detail_top_image_frameLayout);
+                        ViewGroup viewGroup = (ViewGroup)frameLayout.getParent();
+                        viewGroup.removeView(frameLayout);
+                    }
                     setWebContent(detail);
                     commonUtil.promptMsg("Download news Detail Success");
                     break;
@@ -112,11 +127,23 @@ public class StoryDetailActivity extends BaseActivity {
 
 
     private void setWebContent(Detail detail) {
-        final String NewsStyle = "<link rel=\"stylesheet\" type=\"text/css\" href=\"file:///android_asset/style.css\" />";
-        String content;
-        content = "<html><head>" + NewsStyle + "</head><body>" + detail.getBody() + "</body></html>";
-        content = content.replace("<div class=\"img-place-holder\"></div>", "");
-        contentDetailWebView.loadDataWithBaseURL("x-data://base", content, "text/html", "UTF-8", null);
+        if (detail.getBody() != null) {
+            final String NewsStyle = "<link rel=\"stylesheet\" type=\"text/css\" href=\"file:///android_asset/style.css\" />";
+            String content;
+            content = "<html><head>" + NewsStyle + "</head><body>" + detail.getBody() + "</body></html>";
+            content = content.replace("<div class=\"img-place-holder\"></div>", "");
+            contentDetailWebView.loadDataWithBaseURL("x-data://base", content, "text/html", "UTF-8", null);
+        } else {
+            contentDetailWebView.setWebViewClient(new WebViewClient() {
+                @Override
+                public boolean shouldOverrideUrlLoading(WebView view,
+                                                        WebResourceRequest request) {
+                    return false;
+                }
+            });
+            contentDetailWebView.getSettings().setJavaScriptEnabled(true);
+            contentDetailWebView.loadUrl(detail.getShare_url());
+        }
     }
 
     @Override

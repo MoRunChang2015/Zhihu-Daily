@@ -186,7 +186,8 @@ public class MainActivity extends BaseActivity {
                         newsService.getThemeNews(theme.getId(), handler);
                         toolbar.setTitle(theme.getName());
                     } else {
-                        toolbar.setTitle("首页");
+                        if (contentMainFragment.themeId != Constant.THEME_HOME_ID)
+                            toolbar.setTitle("首页");
                     }
                     break;
                 case Constant.NETWORK_ERROR_NEED_RETRY:

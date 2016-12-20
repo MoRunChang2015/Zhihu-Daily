@@ -28,6 +28,7 @@ import cn.zhihu.daily.zhihu_daily.constant.Constant;
 import cn.zhihu.daily.zhihu_daily.factory.ImageResponseHandlerFactory;
 import cn.zhihu.daily.zhihu_daily.model.DailyNews;
 import cn.zhihu.daily.zhihu_daily.model.Summary;
+import cn.zhihu.daily.zhihu_daily.model.Theme;
 import cn.zhihu.daily.zhihu_daily.model.ThemeNews;
 import cn.zhihu.daily.zhihu_daily.model.TopStory;
 import cn.zhihu.daily.zhihu_daily.ui.activity.StoryDetailActivity;
@@ -45,6 +46,7 @@ public class ContentMainFragment extends Fragment {
     ThemeStoriesListAdapter themeStoriesListAdapter;
     StoriesListHandler listener;
     private LinearLayoutManager linearLayoutManager;
+    public int themeId = Constant.THEME_HOME_ID;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -95,9 +97,11 @@ public class ContentMainFragment extends Fragment {
         if (themeId == Constant.THEME_HOME_ID) {
             if (contentList.getAdapter() != contentListAdapter)
                 contentList.setAdapter(contentListAdapter);
+            this.themeId = Constant.THEME_HOME_ID;
         } else {
             themeStoriesListAdapter = new ThemeStoriesListAdapter(getContext());
             contentList.setAdapter(themeStoriesListAdapter);
+            this.themeId = themeId;
         }
     }
 

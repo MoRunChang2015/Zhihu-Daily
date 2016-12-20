@@ -13,6 +13,7 @@ public class Detail implements BitmapContainer {
     private String image_source;
     private String title;
     private String image;
+    private String share_url;
     private Bitmap bitmap;
     private int type;
     private int id;
@@ -79,5 +80,13 @@ public class Detail implements BitmapContainer {
     @Override
     public Bitmap getBitmap() {
         return bitmap;
+    }
+
+    public String getShare_url() {
+        return share_url;
+    }
+
+    public void setShare_url(String share_url) {
+        this.share_url = share_url;
     }
 }
