@@ -19,7 +19,8 @@ import cz.msebera.android.httpclient.Header;
 
 public class ImageResponseHandlerFactory {
     static public BinaryHttpResponseHandler createHandler(final BitmapContainer imageContainer,
-                                                          @Nullable final BitmapContainer bitmapContainer) {
+                                                          @Nullable final BitmapContainer bitmapContainer,
+                                                          @Nullable final Integer id) {
         return new BinaryHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] binaryData) {
@@ -28,7 +29,10 @@ public class ImageResponseHandlerFactory {
                     imageBitmap = Bitmap.createBitmap(imageBitmap, 0, 0, imageBitmap.getWidth(), 550);
                     Log.i("Get Image", "");
                 }
-                imageContainer.setBitmap(imageBitmap);
+                if (id == null)
+                    imageContainer.setBitmap(imageBitmap);
+                else
+                    imageContainer.setBitmap(imageBitmap, id);
                 if (bitmapContainer != null) {
                     bitmapContainer.setBitmap(imageBitmap);
                 }

@@ -86,6 +86,11 @@ public class StoryDetailActivity extends BaseActivity {
                     NetworkUtil.getImage(detail.getImage(),
                             ImageResponseHandlerFactory.createHandler(new BitmapContainer() {
                                 @Override
+                                public void setBitmap(Bitmap bitmap, int id) {
+                                    //do nothing
+                                }
+
+                                @Override
                                 public void setBitmap(Bitmap bitmap) {
                                     imageView.setImageBitmap(bitmap);
                                 }
@@ -94,7 +99,7 @@ public class StoryDetailActivity extends BaseActivity {
                                 public Bitmap getBitmap() {
                                     return null;
                                 }
-                            }, detail));
+                            }, detail, null));
                     setWebContent(detail);
                     commonUtil.promptMsg("Download news Detail Success");
                     break;

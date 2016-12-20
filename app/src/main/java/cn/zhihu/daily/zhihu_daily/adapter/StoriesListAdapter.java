@@ -178,8 +178,9 @@ public class StoriesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             if (item.getBitmap() != null) {
                 itemViewHolder.imageView.setImageBitmap(item.getBitmap());
             } else {
+                itemViewHolder.imageView.setImageResource(R.color.mainActivityBackground);
                 NetworkUtil.getImage(item.getImages().get(0),
-                        ImageResponseHandlerFactory.createHandler(itemViewHolder.getSelf(), item));
+                        ImageResponseHandlerFactory.createHandler(itemViewHolder.getSelf(), item, itemViewHolder.id));
             }
             if (contentList.size() - 10 == position && !isLoading) {
                 isLoading = true;
@@ -232,17 +233,21 @@ class StoryListItemViewHolder extends RecyclerView.ViewHolder implements BitmapC
         });
     }
 
-    private int containerID;
-    public StoryListItemViewHolder getSelf() {
-        containerID = id;
+    StoryListItemViewHolder getSelf() {
         return this;
     }
 
     @Override
-    public void setBitmap(Bitmap bitmap) {
-        if (id == containerID) {
+    public void setBitmap(Bitmap bitmap, int id) {
+        if (this.id == id) {
+            Log.d("setting bitmap", Integer.toString(id));
             imageView.setImageBitmap(bitmap);
         }
+    }
+
+    @Override
+    public void setBitmap(Bitmap bitmap) {
+        // do nothing
     }
 
     @Override

@@ -67,6 +67,11 @@ public class Detail implements BitmapContainer {
     }
 
     @Override
+    public void setBitmap(Bitmap bitmap, int id) {
+        // do nothing
+    }
+
+    @Override
     public void setBitmap(Bitmap bitmap) {
         this.bitmap = bitmap;
     }

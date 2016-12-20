@@ -53,6 +53,11 @@ public class Summary implements BitmapContainer {
         this.bitmap = bitmap;
     }
 
+    @Override
+    public void setBitmap(Bitmap bitmap, int id) {
+        // do nothing
+    }
+
     public int getType() {
         return type;
     }

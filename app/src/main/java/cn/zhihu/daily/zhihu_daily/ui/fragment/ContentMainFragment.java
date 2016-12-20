@@ -128,6 +128,11 @@ public class ContentMainFragment extends Fragment {
                     ImageResponseHandlerFactory.createHandler(
                             new BitmapContainer() {
                                 @Override
+                                public void setBitmap(Bitmap bitmap, int id) {
+                                    //do nothing;
+                                }
+
+                                @Override
                                 public void setBitmap(Bitmap bitmap) {
                                     ((ImageView) item.findViewById(R.id.image)).setImageBitmap(bitmap);
                                 }
@@ -136,7 +141,7 @@ public class ContentMainFragment extends Fragment {
                                 public Bitmap getBitmap() {
                                     return null;
                                 }
-                            }, null));
+                            }, null, null));
             topStoryList.add(item);
         }
         PagerAdapter topStoriesAdapter = new TopStoriesAdapter(topStoryList);
