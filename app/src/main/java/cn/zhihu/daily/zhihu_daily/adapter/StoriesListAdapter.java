@@ -2,6 +2,7 @@ package cn.zhihu.daily.zhihu_daily.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,6 +18,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
+import cn.zhihu.daily.zhihu_daily.Interface.BitmapContainer;
 import cn.zhihu.daily.zhihu_daily.Interface.ExtendStoriesListHandler;
 import cn.zhihu.daily.zhihu_daily.R;
 import cn.zhihu.daily.zhihu_daily.constant.Constant;
@@ -175,7 +177,7 @@ public class StoriesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 itemViewHolder.imageView.setImageBitmap(item.getBitmap());
             } else {
                 NetworkUtil.getImage(item.getImages().get(0),
-                        ImageResponseHandlerFactory.createHandler(itemViewHolder.imageView, item));
+                        ImageResponseHandlerFactory.createHandler(itemViewHolder.getSelf(), item));
             }
             if (contentList.size() - 10 == position && !isLoading) {
                 isLoading = true;
@@ -208,7 +210,7 @@ class TopStoriesViewHolder extends RecyclerView.ViewHolder {
     }
 }
 
-class StoryListItemViewHolder extends RecyclerView.ViewHolder {
+class StoryListItemViewHolder extends RecyclerView.ViewHolder implements BitmapContainer {
 
     ImageView imageView;
     TextView textView;
@@ -226,6 +228,24 @@ class StoryListItemViewHolder extends RecyclerView.ViewHolder {
                 context.startActivity(intent);
             }
         });
+    }
+
+    private int containerID;
+    public StoryListItemViewHolder getSelf() {
+        containerID = id;
+        return this;
+    }
+
+    @Override
+    public void setBitmap(Bitmap bitmap) {
+        if (id == containerID) {
+            imageView.setImageBitmap(bitmap);
+        }
+    }
+
+    @Override
+    public Bitmap getBitmap() {
+        return null;
     }
 }
 
