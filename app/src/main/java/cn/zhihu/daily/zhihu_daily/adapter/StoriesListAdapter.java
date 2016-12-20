@@ -36,7 +36,7 @@ public class StoriesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private static final int TYPE_ITEM = 1;
     private static final int TYPE_DATE = 2;
     private static final int TYPE_LOADING = 3;
-    private static Calendar today;
+    private static Calendar today = null;
 
     private Context context;
     private List<Summary> contentList;
@@ -72,6 +72,8 @@ public class StoriesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         } else {
             contentList.addAll(contentList.size() - 1, list);
         }
+        if (today == null)
+            today = formatDateToCalendar(contentList.get(0).getDate());
         notifyDataSetChanged();
     }
 
