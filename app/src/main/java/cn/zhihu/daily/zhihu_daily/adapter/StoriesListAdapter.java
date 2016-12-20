@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
@@ -47,6 +48,15 @@ public class StoriesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private ExtendStoriesListHandler extendStoriesListHandler;
 
     public StoriesListAdapter(Context context, ViewPagerWithIndicator topStores,
+                              ExtendStoriesListHandler extendStoriesListHandler) {
+        this.context = context;
+        this.topStores = topStores;
+        contentList = new ArrayList<>();
+        this.extendStoriesListHandler = extendStoriesListHandler;
+        isLoading = true;
+    }
+
+    public StoriesListAdapter(Context context, ViewPagerWithIndicator topStores,
                               List<Summary> contentList, ExtendStoriesListHandler extendStoriesListHandler) {
         this.topStores = topStores;
         this.contentList = contentList;
@@ -55,9 +65,13 @@ public class StoriesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         today = formatDateToCalendar(contentList.get(0).getDate());
     }
 
-    public void addBeforeStoriesList(List<Summary> list) {
+    public void addStoriesList(List<Summary> list) {
         isLoading = false;
-        contentList.addAll(contentList.size() - 1, list);
+        if (contentList.size() == 0) {
+            contentList.addAll(list);
+        } else {
+            contentList.addAll(contentList.size() - 1, list);
+        }
         notifyDataSetChanged();
     }
 
@@ -102,10 +116,10 @@ public class StoriesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public int getItemViewType(int position) {
-        if (position == 0) {
+        if (position == 0 && getItemCount() > 1) {
             return TYPE_TOP_STORY;
         }
-        if (position == contentList.size() - 1) {
+        if (position == getItemCount() - 1) {
             return TYPE_LOADING;
         }
         if (contentList.get(position).getType() == Constant.ITEM_DATE_TYPE) {
@@ -149,6 +163,9 @@ public class StoriesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
+        if (position == getItemCount() - 1) {
+            return;
+        }
         Summary item = contentList.get(position);
         if (holder.getItemViewType() == TYPE_ITEM) {
             StoryListItemViewHolder itemViewHolder = (StoryListItemViewHolder) holder;
@@ -175,7 +192,7 @@ public class StoriesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public int getItemCount() {
-        return contentList.size();
+        return contentList.size() + 1;
     }
 }
 

@@ -137,6 +137,7 @@ public class MainActivity extends BaseActivity {
         }
     };
 
+
     Handler handler = new Handler() {
         @Override
         public void handleMessage(Message message) {

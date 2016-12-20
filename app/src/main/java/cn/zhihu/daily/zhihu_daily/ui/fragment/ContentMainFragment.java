@@ -7,7 +7,6 @@ import android.os.Handler;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,6 +53,24 @@ public class ContentMainFragment extends Fragment {
         linearLayoutManager = new LinearLayoutManager(getContext());
         contentList.setLayoutManager(linearLayoutManager);
         topStoriesViewPager = new ViewPagerWithIndicator(getContext());
+        contentListAdapter = new StoriesListAdapter(getContext(), topStoriesViewPager,
+                new ExtendStoriesListHandler() {
+            @Override
+            public int getFirstVisibleItemPosition() {
+                return linearLayoutManager.findFirstCompletelyVisibleItemPosition();
+            }
+
+            @Override
+            public void onEnd(String date) {
+                listener.onEnd(date);
+            }
+
+            @Override
+            public void onDateChange(String date) {
+                listener.onDateChange(date);
+            }
+        });
+        contentList.setAdapter(contentListAdapter);
     }
 
     public void setOnListMovedToEndListener(StoriesListHandler listener) {
@@ -65,7 +82,7 @@ public class ContentMainFragment extends Fragment {
     }
 
     public void addSummary(List<Summary> summaryList) {
-        contentListAdapter.addBeforeStoriesList(summaryList);
+        contentListAdapter.addStoriesList(summaryList);
     }
 
     public void getBeforeStoriesFail() {
@@ -112,24 +129,6 @@ public class ContentMainFragment extends Fragment {
         }
         PagerAdapter topStoriesAdapter = new TopStoriesAdapter(topStoryList);
         topStoriesViewPager.setAdapter(topStoriesAdapter);
-        contentListAdapter = new StoriesListAdapter(
-                getContext(), topStoriesViewPager, dailyNews.getStories(), new ExtendStoriesListHandler() {
-            @Override
-            public int getFirstVisibleItemPosition() {
-                return linearLayoutManager.findFirstCompletelyVisibleItemPosition();
-            }
-
-            @Override
-            public void onEnd(String date) {
-                listener.onEnd(date);
-            }
-
-            @Override
-            public void onDateChange(String date) {
-                listener.onDateChange(date);
-            }
-        });
-        contentList.setAdapter(contentListAdapter);
-
+        contentListAdapter.addStoriesList(dailyNews.getStories());
     }
 }
