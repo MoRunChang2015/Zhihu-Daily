@@ -76,14 +76,18 @@ public class ContentMainFragment extends Fragment {
 
     public void scrollToTop() {
         contentList.smoothScrollToPosition(0);
-        mHandler.postDelayed(runnable, 500);
+        mHandler.postDelayed(runnable, 100);
     }
 
     Runnable runnable = new Runnable() {
         @Override
         public void run() {
+            if (linearLayoutManager.findFirstVisibleItemPosition() < 3) {
+                return;
+            }
             contentList.stopScroll();
-            contentList.scrollToPosition(0);
+            contentList.scrollToPosition(1);
+            contentList.smoothScrollToPosition(0);
         }
     };
 

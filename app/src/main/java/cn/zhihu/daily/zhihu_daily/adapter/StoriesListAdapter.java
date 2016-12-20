@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Locale;
 
 import cn.zhihu.daily.zhihu_daily.Interface.ExtendStoriesListHandler;
-import cn.zhihu.daily.zhihu_daily.Interface.OnScrollingStateChanged;
 import cn.zhihu.daily.zhihu_daily.R;
 import cn.zhihu.daily.zhihu_daily.constant.Constant;
 import cn.zhihu.daily.zhihu_daily.factory.ImageResponseHandlerFactory;
@@ -35,6 +34,7 @@ public class StoriesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private static final int TYPE_TOP_STORY = 0;
     private static final int TYPE_ITEM = 1;
     private static final int TYPE_DATE = 2;
+    private static final int TYPE_LOADING = 3;
     private static Calendar today;
 
     private Context context;
@@ -46,10 +46,18 @@ public class StoriesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private ViewPagerWithIndicator topStores;
     private ExtendStoriesListHandler extendStoriesListHandler;
 
+    public StoriesListAdapter(Context context, ViewPagerWithIndicator topStores,
+                              List<Summary> contentList, ExtendStoriesListHandler extendStoriesListHandler) {
+        this.topStores = topStores;
+        this.contentList = contentList;
+        this.context = context;
+        this.extendStoriesListHandler = extendStoriesListHandler;
+        today = formatDateToCalendar(contentList.get(0).getDate());
+    }
 
     public void addBeforeStoriesList(List<Summary> list) {
         isLoading = false;
-        contentList.addAll(list);
+        contentList.addAll(contentList.size() - 1, list);
         notifyDataSetChanged();
     }
 
@@ -92,20 +100,13 @@ public class StoriesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
 
-    public StoriesListAdapter(Context context, ViewPagerWithIndicator topStores,
-                              List<Summary> contentList, ExtendStoriesListHandler extendStoriesListHandler) {
-        this.topStores = topStores;
-        this.contentList = contentList;
-        this.context = context;
-        this.extendStoriesListHandler = extendStoriesListHandler;
-        today = formatDateToCalendar(contentList.get(0).getDate());
-    }
-
-
     @Override
     public int getItemViewType(int position) {
         if (position == 0) {
             return TYPE_TOP_STORY;
+        }
+        if (position == contentList.size() - 1) {
+            return TYPE_LOADING;
         }
         if (contentList.get(position).getType() == Constant.ITEM_DATE_TYPE) {
             return TYPE_DATE;
@@ -117,16 +118,20 @@ public class StoriesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        if (viewType == TYPE_TOP_STORY) {
-            return new TopStoriesViewHolder(topStores);
-        }
         if (viewType == TYPE_ITEM) {
             View storyListItem = inflater.inflate(R.layout.story_list_item, parent, false);
             return new StoryListItemViewHolder(context, storyListItem);
         }
-        View storyListDate = inflater.inflate(R.layout.story_list_date, parent, false);
-        return new StoryListDateViewHolder(storyListDate);
+        if (viewType == TYPE_DATE) {
+            View storyListDate = inflater.inflate(R.layout.story_list_date, parent, false);
+            return new StoryListDateViewHolder(storyListDate);
+        }
+        if (viewType == TYPE_TOP_STORY) {
+            return new TopStoriesViewHolder(topStores);
+        }
 
+        View loadingItem = inflater.inflate(R.layout.story_list_loading, parent, false);
+        return new LoadingViewHolder(loadingItem);
     }
 
     private void checkDateChange() {
@@ -155,7 +160,7 @@ public class StoriesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 NetworkUtil.getImage(item.getImages().get(0),
                         ImageResponseHandlerFactory.createHandler(itemViewHolder.imageView, item));
             }
-            if (contentList.size() - 1 == position && !isLoading) {
+            if (contentList.size() - 10 == position && !isLoading) {
                 isLoading = true;
                 loadingDate = getCurrentFormatDate();
                 extendStoriesListHandler.onEnd(loadingDate);
@@ -171,6 +176,12 @@ public class StoriesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     @Override
     public int getItemCount() {
         return contentList.size();
+    }
+}
+
+class LoadingViewHolder extends RecyclerView.ViewHolder {
+    LoadingViewHolder(View itemView) {
+        super(itemView);
     }
 }
 
