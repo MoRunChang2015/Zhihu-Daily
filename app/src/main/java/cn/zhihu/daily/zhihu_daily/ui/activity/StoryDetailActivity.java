@@ -22,7 +22,7 @@ import butterknife.BindView;
 import cn.zhihu.daily.zhihu_daily.Interface.BitmapContainer;
 import cn.zhihu.daily.zhihu_daily.R;
 import cn.zhihu.daily.zhihu_daily.base.BaseActivity;
-import cn.zhihu.daily.zhihu_daily.constant.Constant;
+import cn.zhihu.daily.zhihu_daily.global.Constant;
 import cn.zhihu.daily.zhihu_daily.factory.ImageResponseHandlerFactory;
 import cn.zhihu.daily.zhihu_daily.model.Detail;
 import cn.zhihu.daily.zhihu_daily.service.NewsService;

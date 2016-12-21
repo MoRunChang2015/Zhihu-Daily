@@ -10,7 +10,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
 
-import cn.zhihu.daily.zhihu_daily.constant.Constant;
+import cn.zhihu.daily.zhihu_daily.global.Constant;
 
 /**
  * Created by morc on 16-12-7.

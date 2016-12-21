@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.view.GestureDetector;
-import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
 import android.view.View;
 import android.support.v4.view.GravityCompat;
@@ -26,7 +25,8 @@ import butterknife.BindView;
 import cn.zhihu.daily.zhihu_daily.Interface.StoriesListHandler;
 import cn.zhihu.daily.zhihu_daily.R;
 import cn.zhihu.daily.zhihu_daily.base.BaseActivity;
-import cn.zhihu.daily.zhihu_daily.constant.Constant;
+import cn.zhihu.daily.zhihu_daily.global.Config;
+import cn.zhihu.daily.zhihu_daily.global.Constant;
 import cn.zhihu.daily.zhihu_daily.model.DailyNews;
 import cn.zhihu.daily.zhihu_daily.model.Summary;
 import cn.zhihu.daily.zhihu_daily.model.Theme;
@@ -230,7 +230,16 @@ public class MainActivity extends BaseActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_no_image) {
+            if (Config.downLoadImage) {
+                item.setTitle(R.string.action_download_image);
+            } else {
+                item.setTitle(R.string.action_no_image);
+            }
+            Config.downLoadImage = !Config.downLoadImage;
+            return true;
+        }
+        if (id == R.id.action_cache) {
             return true;
         }
 

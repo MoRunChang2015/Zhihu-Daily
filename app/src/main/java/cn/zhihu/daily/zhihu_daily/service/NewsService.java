@@ -2,31 +2,20 @@ package cn.zhihu.daily.zhihu_daily.service;
 
 import android.app.Service;
 import android.content.Intent;
-import android.net.Network;
 import android.os.Binder;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
-import android.provider.ContactsContract;
-import android.util.Log;
 
-import com.alibaba.fastjson.JSON;
 import com.loopj.android.http.JsonHttpResponseHandler;
-import com.loopj.android.http.TextHttpResponseHandler;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import cn.zhihu.daily.zhihu_daily.constant.Constant;
+import cn.zhihu.daily.zhihu_daily.global.Constant;
 import cn.zhihu.daily.zhihu_daily.factory.JsonResponseHandlerFactory;
 import cn.zhihu.daily.zhihu_daily.model.DailyNews;
 import cn.zhihu.daily.zhihu_daily.model.Detail;
-import cn.zhihu.daily.zhihu_daily.model.Theme;
 import cn.zhihu.daily.zhihu_daily.model.ThemeList;
 import cn.zhihu.daily.zhihu_daily.model.ThemeNews;
 import cn.zhihu.daily.zhihu_daily.util.NetworkUtil;

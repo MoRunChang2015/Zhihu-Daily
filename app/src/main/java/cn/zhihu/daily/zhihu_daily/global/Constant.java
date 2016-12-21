@@ -1,4 +1,4 @@
-package cn.zhihu.daily.zhihu_daily.constant;
+package cn.zhihu.daily.zhihu_daily.global;
 
 /**
  * Created by morc on 16-12-7.
@@ -41,4 +41,5 @@ public interface Constant {
     int THEME_HOME_ID = 0;
 
     int ITEM_DATE_TYPE = 7;
+
 }

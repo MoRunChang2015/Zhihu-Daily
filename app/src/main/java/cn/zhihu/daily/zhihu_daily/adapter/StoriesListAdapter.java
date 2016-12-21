@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +20,7 @@ import java.util.Locale;
 import cn.zhihu.daily.zhihu_daily.Interface.BitmapContainer;
 import cn.zhihu.daily.zhihu_daily.Interface.ExtendStoriesListHandler;
 import cn.zhihu.daily.zhihu_daily.R;
-import cn.zhihu.daily.zhihu_daily.constant.Constant;
+import cn.zhihu.daily.zhihu_daily.global.Constant;
 import cn.zhihu.daily.zhihu_daily.factory.ImageResponseHandlerFactory;
 import cn.zhihu.daily.zhihu_daily.model.Summary;
 import cn.zhihu.daily.zhihu_daily.ui.activity.StoryDetailActivity;
@@ -69,11 +68,9 @@ public class StoriesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     public void addStoriesList(List<Summary> list) {
         isLoading = false;
-        if (contentList.size() == 0) {
-            contentList.addAll(list);
-        } else {
-            contentList.addAll(contentList.size() - 1, list);
-        }
+
+        contentList.addAll(list);
+
         if (today == null)
             today = formatDateToCalendar(contentList.get(0).getDate());
         notifyDataSetChanged();
