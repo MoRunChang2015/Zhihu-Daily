@@ -22,6 +22,7 @@ import butterknife.BindView;
 import cn.zhihu.daily.zhihu_daily.Interface.BitmapContainer;
 import cn.zhihu.daily.zhihu_daily.R;
 import cn.zhihu.daily.zhihu_daily.base.BaseActivity;
+import cn.zhihu.daily.zhihu_daily.global.Config;
 import cn.zhihu.daily.zhihu_daily.global.Constant;
 import cn.zhihu.daily.zhihu_daily.factory.ImageResponseHandlerFactory;
 import cn.zhihu.daily.zhihu_daily.model.Detail;
@@ -127,12 +128,18 @@ public class StoryDetailActivity extends BaseActivity {
 
 
     private void setWebContent(Detail detail) {
-        contentDetailWebView.getSettings().setJavaScriptEnabled(true);
+        if (Config.downLoadImage) {
+            contentDetailWebView.getSettings().setJavaScriptEnabled(true);
+        } else {
+            contentDetailWebView.getSettings().setLoadsImagesAutomatically(false);
+            contentDetailWebView.getSettings().setBlockNetworkImage(false);
+        }
         if (detail.getBody() != null) {
             final String NewsStyle = "<link rel=\"stylesheet\" type=\"text/css\" href=\"file:///android_asset/style.css\" />";
             String content;
             content = "<html><head>" + NewsStyle + "</head><body>" + detail.getBody() + "</body></html>";
             content = content.replace("<div class=\"img-place-holder\"></div>", "");
+
             contentDetailWebView.loadDataWithBaseURL("x-data://base", content, "text/html", "UTF-8", null);
         } else {
             contentDetailWebView.setWebViewClient(new WebViewClient() {
