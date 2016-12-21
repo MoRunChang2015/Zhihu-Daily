@@ -181,14 +181,14 @@ public class MainActivity extends BaseActivity {
                     drawer.closeDrawers();
                     Theme theme = (Theme) message.obj;
                     commonUtil.promptMsg("theme name is " + theme.getName());
-                    contentMainFragment.changeTheme(theme.getId());
                     if (theme.getId() != Constant.THEME_HOME_ID) {
                         newsService.getThemeNews(theme.getId(), handler);
                         toolbar.setTitle(theme.getName());
                     } else {
                         if (contentMainFragment.themeId != Constant.THEME_HOME_ID)
-                            toolbar.setTitle("首页");
+                            toolbar.setTitle("今日大新闻");
                     }
+                    contentMainFragment.changeTheme(theme.getId());
                     break;
                 case Constant.NETWORK_ERROR_NEED_RETRY:
                     contentMainFragment.getBeforeStoriesFail();

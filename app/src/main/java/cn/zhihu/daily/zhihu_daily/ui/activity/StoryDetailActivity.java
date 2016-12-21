@@ -127,6 +127,7 @@ public class StoryDetailActivity extends BaseActivity {
 
 
     private void setWebContent(Detail detail) {
+        contentDetailWebView.getSettings().setJavaScriptEnabled(true);
         if (detail.getBody() != null) {
             final String NewsStyle = "<link rel=\"stylesheet\" type=\"text/css\" href=\"file:///android_asset/style.css\" />";
             String content;
@@ -141,7 +142,6 @@ public class StoryDetailActivity extends BaseActivity {
                     return false;
                 }
             });
-            contentDetailWebView.getSettings().setJavaScriptEnabled(true);
             contentDetailWebView.loadUrl(detail.getShare_url());
         }
     }
