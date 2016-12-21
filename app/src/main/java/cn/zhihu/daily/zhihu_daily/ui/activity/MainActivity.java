@@ -186,7 +186,7 @@ public class MainActivity extends BaseActivity {
                         toolbar.setTitle(theme.getName());
                     } else {
                         if (contentMainFragment.themeId != Constant.THEME_HOME_ID)
-                            toolbar.setTitle("今日大新闻");
+                            toolbar.setTitle("今日的大新闻");
                     }
                     contentMainFragment.changeTheme(theme.getId());
                     break;
