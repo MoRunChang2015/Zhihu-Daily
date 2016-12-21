@@ -10,6 +10,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
 
+import cn.zhihu.daily.zhihu_daily.global.Config;
 import cn.zhihu.daily.zhihu_daily.global.Constant;
 
 /**
@@ -79,6 +80,8 @@ public class NetworkUtil {
     }
 
     public static void getImage(String url, BinaryHttpResponseHandler handler) {
-        get(url, handler);
+        if (Config.downLoadImage) {
+            get(url, handler);
+        }
     }
 }

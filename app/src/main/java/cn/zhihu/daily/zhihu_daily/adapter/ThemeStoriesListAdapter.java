@@ -43,7 +43,7 @@ public class ThemeStoriesListAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     @Override
     public int getItemViewType(int position) {
-        if (getItemCount() == 0) {
+        if (getItemCount() == 1 && position == 0) {
             return TYPE_LOADING;
         }
         if (position == 0 && getItemCount() > 1) {
@@ -51,6 +51,7 @@ public class ThemeStoriesListAdapter extends RecyclerView.Adapter<RecyclerView.V
         }
         if (contentList.get(position).getImages() == null)
             return TYPE_ITEM_WITHOUT_IMAGE;
+
         return TYPE_ITEM;
     }
 
@@ -93,6 +94,9 @@ public class ThemeStoriesListAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        if (contentList.size() == 0) {
+            return;
+        }
         Summary item = contentList.get(position);
         if (holder.getItemViewType() == TYPE_ITEM || holder.getItemViewType() == TYPE_ITEM_WITHOUT_IMAGE) {
             StoryListItemViewHolder itemViewHolder = (StoryListItemViewHolder) holder;
@@ -112,6 +116,9 @@ public class ThemeStoriesListAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     @Override
     public int getItemCount() {
+        if (contentList.size() == 0) {
+            return 1;
+        }
         return contentList.size();
     }
 }

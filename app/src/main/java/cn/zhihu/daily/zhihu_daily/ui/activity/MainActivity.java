@@ -97,7 +97,7 @@ public class MainActivity extends BaseActivity {
             public void onEnd(String date) {
                 newsService.getBeforeNews(date, handler);
                 Log.d(tag, "Get news: " + date);
-                commonUtil.promptMsg("Get news: " + date);
+                // commonUtil.promptMsg("Get news: " + date);
             }
 
             @Override
@@ -168,7 +168,7 @@ public class MainActivity extends BaseActivity {
                 case Constant.DOWNLOAD_THEME_NEWS_SUCCESS:
                     ThemeNews themeNews = (ThemeNews)message.obj;
                     contentMainFragment.addThemeNews(themeNews);
-                    commonUtil.promptMsg("Download Theme News Success!");
+                    // commonUtil.promptMsg("Download Theme News Success!");
                     break;
                 case Constant.NETWORK_ERROR:
                     commonUtil.promptMsg("Network Error");
@@ -180,7 +180,7 @@ public class MainActivity extends BaseActivity {
                 case Constant.THEME_CHANGE:
                     drawer.closeDrawers();
                     Theme theme = (Theme) message.obj;
-                    commonUtil.promptMsg("theme name is " + theme.getName());
+                    // commonUtil.promptMsg("theme name is " + theme.getName());
                     if (theme.getId() != Constant.THEME_HOME_ID) {
                         newsService.getThemeNews(theme.getId(), handler);
                         toolbar.setTitle(theme.getName());
@@ -192,7 +192,7 @@ public class MainActivity extends BaseActivity {
                     break;
                 case Constant.NETWORK_ERROR_NEED_RETRY:
                     contentMainFragment.getBeforeStoriesFail();
-                    commonUtil.promptMsg("Network Error...retrying...");
+                    // commonUtil.promptMsg("Network Error...retrying...");
                     break;
                 default:
                     break;
@@ -233,8 +233,10 @@ public class MainActivity extends BaseActivity {
         if (id == R.id.action_no_image) {
             if (Config.downLoadImage) {
                 item.setTitle(R.string.action_download_image);
+                commonUtil.promptMsg("开启无图模式");
             } else {
                 item.setTitle(R.string.action_no_image);
+                commonUtil.promptMsg("关闭无图模式");
             }
             Config.downLoadImage = !Config.downLoadImage;
             return true;

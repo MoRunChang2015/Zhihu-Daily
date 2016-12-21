@@ -76,11 +76,11 @@ public class ThemeListAdapter extends RecyclerView.Adapter<ThemeListAdapter.View
 
     }
 
-
     @Override
     public int getItemCount() {
         return data.size();
     }
+
 
     class ViewHolder extends RecyclerView.ViewHolder {
         TextView textView;

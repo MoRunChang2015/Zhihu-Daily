@@ -24,7 +24,7 @@ import cn.zhihu.daily.zhihu_daily.R;
 import cn.zhihu.daily.zhihu_daily.adapter.StoriesListAdapter;
 import cn.zhihu.daily.zhihu_daily.adapter.ThemeStoriesListAdapter;
 import cn.zhihu.daily.zhihu_daily.adapter.TopStoriesAdapter;
-import cn.zhihu.daily.zhihu_daily.constant.Constant;
+import cn.zhihu.daily.zhihu_daily.global.Constant;
 import cn.zhihu.daily.zhihu_daily.factory.ImageResponseHandlerFactory;
 import cn.zhihu.daily.zhihu_daily.model.DailyNews;
 import cn.zhihu.daily.zhihu_daily.model.Summary;
