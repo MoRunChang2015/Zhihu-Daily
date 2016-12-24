@@ -56,10 +56,15 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
+    @Override
+    protected int setLayout() {
+        return R.layout.activity_main;
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void initViews(Bundle savedInstanceState) {
+        commonUtil = new CommonUtil(fab);
+
         setSupportActionBar(toolbar);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,17 +77,6 @@ public class MainActivity extends BaseActivity {
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-    }
-
-
-    @Override
-    protected int setLayout() {
-        return R.layout.activity_main;
-    }
-
-    @Override
-    protected void initViews(Bundle savedInstanceState) {
-        commonUtil = new CommonUtil(fab);
 
         if (!NetworkUtil.isNetworkAvailable(this))
             commonUtil.promptMsg("Network is not available");
@@ -106,7 +100,8 @@ public class MainActivity extends BaseActivity {
             }
         });
 
-        final GestureDetector gestureDetector = new GestureDetector(MainActivity.this, new GestureDetector.SimpleOnGestureListener() {
+        final GestureDetector gestureDetector = new GestureDetector(MainActivity.this,
+                new GestureDetector.SimpleOnGestureListener() {
             @Override
             public boolean onDoubleTap(MotionEvent event) {
                 contentMainFragment.scrollToTop();
@@ -144,7 +139,7 @@ public class MainActivity extends BaseActivity {
             super.handleMessage(message);
             switch (message.what) {
                 case Constant.DOWNLOAD_LATEST_NEWS_SUCCESS:
-                    DailyNews dailyNews = (DailyNews)message.obj;
+                    DailyNews dailyNews = (DailyNews)((Object[])message.obj)[0];
                     dailyNews.getStories().add(0, new Summary());
                     for (Summary summary: dailyNews.getStories()) {
                         summary.setDate(dailyNews.getDate());
@@ -162,11 +157,11 @@ public class MainActivity extends BaseActivity {
                     contentMainFragment.addSummary(beforeNews.getStories());
                     break;
                 case Constant.DOWNLOAD_THEME_LIST_SUCCESS:
-                    ThemeList themeList = (ThemeList)message.obj;
+                    ThemeList themeList = (ThemeList)((Object[])message.obj)[0];
                     setNavigation(themeList);
                     break;
                 case Constant.DOWNLOAD_THEME_NEWS_SUCCESS:
-                    ThemeNews themeNews = (ThemeNews)message.obj;
+                    ThemeNews themeNews = (ThemeNews)((Object[])message.obj)[0];
                     contentMainFragment.addThemeNews(themeNews);
                     // commonUtil.promptMsg("Download Theme News Success!");
                     break;
@@ -179,7 +174,7 @@ public class MainActivity extends BaseActivity {
                     break;
                 case Constant.THEME_CHANGE:
                     drawer.closeDrawers();
-                    Theme theme = (Theme) message.obj;
+                    Theme theme = (Theme) ((Object[])message.obj)[0];
                     // commonUtil.promptMsg("theme name is " + theme.getName());
                     if (theme.getId() != Constant.THEME_HOME_ID) {
                         newsService.getThemeNews(theme.getId(), handler);

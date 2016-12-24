@@ -26,6 +26,7 @@ import cn.zhihu.daily.zhihu_daily.global.Config;
 import cn.zhihu.daily.zhihu_daily.global.Constant;
 import cn.zhihu.daily.zhihu_daily.factory.ImageResponseHandlerFactory;
 import cn.zhihu.daily.zhihu_daily.model.Detail;
+import cn.zhihu.daily.zhihu_daily.service.ImageProvider;
 import cn.zhihu.daily.zhihu_daily.service.NewsService;
 import cn.zhihu.daily.zhihu_daily.util.CommonUtil;
 import cn.zhihu.daily.zhihu_daily.util.NetworkUtil;
@@ -36,6 +37,8 @@ public class StoryDetailActivity extends BaseActivity {
     private NewsService newsService;
 
     private Detail detail;
+
+    private ImageProvider imageProvider = new ImageProvider(this);
 
     final String tag = "StoryDetailActivity";
 
@@ -95,23 +98,22 @@ public class StoryDetailActivity extends BaseActivity {
                     titleTextView.setText(detail.getTitle());
                     imageSourceTextView.setText(detail.getImage_source());
                     if (detail.getImage() != null) {
-                        NetworkUtil.getImage(detail.getImage(),
-                                ImageResponseHandlerFactory.createHandler(new BitmapContainer() {
-                                    @Override
-                                    public void setBitmap(Bitmap bitmap, int id) {
-                                        //do nothing
-                                    }
+                        imageProvider.loadImage(detail.getImage(), new BitmapContainer() {
+                            @Override
+                            public void setBitmap(Bitmap bitmap, int id) {
+                                //do nothing
+                            }
 
-                                    @Override
-                                    public void setBitmap(Bitmap bitmap) {
-                                        imageView.setImageBitmap(bitmap);
-                                    }
+                            @Override
+                            public void setBitmap(Bitmap bitmap) {
+                                imageView.setImageBitmap(bitmap);
+                            }
 
-                                    @Override
-                                    public Bitmap getBitmap() {
-                                        return null;
-                                    }
-                                }, detail, null));
+                            @Override
+                            public Bitmap getBitmap() {
+                                return null;
+                            }
+                        }, detail, null);
                     } else {
                         FrameLayout frameLayout = (FrameLayout)findViewById(R.id.detail_top_image_frameLayout);
                         ViewGroup viewGroup = (ViewGroup)frameLayout.getParent();

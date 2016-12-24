@@ -2,11 +2,11 @@ package cn.zhihu.daily.zhihu_daily.factory;
 
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
 import com.loopj.android.http.TextHttpResponseHandler;
+
 import cz.msebera.android.httpclient.Header;
 
 /**
@@ -14,7 +14,11 @@ import cz.msebera.android.httpclient.Header;
  */
 
 public class JsonResponseHandlerFactory {
-    static public <T> TextHttpResponseHandler createHandler(final Class<T> className, final Handler handler, final int SUCCESS_CODE, final int FAIL_CODE, final int JSON_PARSE_ERROR) {
+    static public <T> TextHttpResponseHandler createHandler(final Class<T> className,
+                                                            final Handler handler,
+                                                            final int SUCCESS_CODE,
+                                                            final int FAIL_CODE,
+                                                            final int JSON_PARSE_ERROR) {
         return new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
@@ -38,7 +42,7 @@ public class JsonResponseHandlerFactory {
                 }
 
                 Message msg = new Message();
-                msg.obj = temp;
+                msg.obj = new Object[] {temp, responseString};
                 msg.what = SUCCESS_CODE;
                 handler.sendMessage(msg);
             }

@@ -20,6 +20,8 @@ public interface Constant {
 
     String ThemeNews = "http://news-at.zhihu.com/api/4/theme/";
 
+    String DatabaseName = "News.db";
+
     int NETWORK_ERROR = -1;
 
     int JSON_PARSE_ERROR = -2;

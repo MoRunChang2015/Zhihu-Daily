@@ -12,6 +12,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import cn.zhihu.daily.zhihu_daily.database.DBNewsBefore;
 import cn.zhihu.daily.zhihu_daily.global.Constant;
 import cn.zhihu.daily.zhihu_daily.factory.JsonResponseHandlerFactory;
 import cn.zhihu.daily.zhihu_daily.model.DailyNews;
@@ -24,8 +25,16 @@ import cz.msebera.android.httpclient.Header;
 public class NewsService extends Service {
     final String tag = "NewsService";
     private final IBinder binder = new MyBinder();
+    private DBNewsBefore dbNewsBefore;
     public NewsService() {
     }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        dbNewsBefore = new DBNewsBefore(getApplicationContext());
+    }
+
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -69,8 +78,39 @@ public class NewsService extends Service {
     }
 
     public void getBeforeNews(String date, final Handler handler) {
-        NetworkUtil.getBeforeNews(date, JsonResponseHandlerFactory.createHandler(DailyNews.class, handler,
-                Constant.DOWNLOAD_BEFORE_NEWS_SUCCESS, Constant.NETWORK_ERROR_NEED_RETRY, Constant.JSON_PARSE_ERROR));
+        DailyNews beforeNews = dbNewsBefore.getBeforeNewsAt(date);
+        if (beforeNews  != null) {
+            Message msg = new Message();
+            msg.obj = beforeNews;
+            msg.what = Constant.DOWNLOAD_BEFORE_NEWS_SUCCESS;
+            handler.sendMessage(msg);
+            return;
+        }
+
+        Handler newsServiceHandler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                switch (msg.what) {
+                    case Constant.DOWNLOAD_BEFORE_NEWS_SUCCESS:
+                        Object[] objects = (Object[])msg.obj;
+                        DailyNews dailyNews = (DailyNews) objects[0];
+                        String json = (String)objects[1];
+                        dbNewsBefore.setBeforeNewsAt(dailyNews.getDate(), json);
+                        Message message = new Message();
+                        message.obj = objects[0];
+                        message.what = msg.what;
+                        handler.sendMessage(message);
+                }
+            }
+        };
+
+        NetworkUtil.getBeforeNews(date, JsonResponseHandlerFactory.createHandler(
+                DailyNews.class,
+                newsServiceHandler,
+                Constant.DOWNLOAD_BEFORE_NEWS_SUCCESS,
+                Constant.NETWORK_ERROR_NEED_RETRY,
+                Constant.JSON_PARSE_ERROR));
     }
 
 

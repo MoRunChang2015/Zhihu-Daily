@@ -18,6 +18,7 @@ import cn.zhihu.daily.zhihu_daily.R;
 import cn.zhihu.daily.zhihu_daily.factory.ImageResponseHandlerFactory;
 import cn.zhihu.daily.zhihu_daily.model.Summary;
 import cn.zhihu.daily.zhihu_daily.model.ThemeNews;
+import cn.zhihu.daily.zhihu_daily.service.ImageProvider;
 import cn.zhihu.daily.zhihu_daily.util.NetworkUtil;
 
 /**
@@ -35,10 +36,12 @@ public class ThemeStoriesListAdapter extends RecyclerView.Adapter<RecyclerView.V
     private TopImageViewHolder topImageViewHolder = null;
     private String topImageUrl;
     private String topImageDescription;
+    private ImageProvider imageProvider;
 
     public ThemeStoriesListAdapter(Context context) {
         contentList = new ArrayList<>();
         this.context = context;
+        imageProvider = new ImageProvider(context);
     }
 
     @Override
@@ -82,8 +85,7 @@ public class ThemeStoriesListAdapter extends RecyclerView.Adapter<RecyclerView.V
             if (topImageViewHolder == null) {
                 View topImageView = inflater.inflate(R.layout.top_story_item, parent, false);
                 topImageViewHolder = new TopImageViewHolder(topImageView);
-                NetworkUtil.getImage(topImageUrl, ImageResponseHandlerFactory
-                        .createHandler(topImageViewHolder.getSelf(), null, null));
+                imageProvider.loadImage(topImageUrl, topImageViewHolder, null, null);
                 topImageViewHolder.textView.setText(topImageDescription);
             }
             return topImageViewHolder;
@@ -107,8 +109,7 @@ public class ThemeStoriesListAdapter extends RecyclerView.Adapter<RecyclerView.V
                     itemViewHolder.imageView.setImageBitmap(item.getBitmap());
                 } else {
                     itemViewHolder.imageView.setImageResource(R.color.mainActivityBackground);
-                    NetworkUtil.getImage(item.getImages().get(0),
-                            ImageResponseHandlerFactory.createHandler(itemViewHolder.getSelf(), item, itemViewHolder.id));
+                    imageProvider.loadImage(item.getImages().get(0), itemViewHolder, item, itemViewHolder.id);
                 }
             }
         }
@@ -131,11 +132,6 @@ class TopImageViewHolder extends RecyclerView.ViewHolder implements BitmapContai
         super(itemView);
         imageView = (ImageView)itemView.findViewById(R.id.image);
         textView = (TextView)itemView.findViewById(R.id.title);
-    }
-
-
-    TopImageViewHolder getSelf() {
-        return this;
     }
 
     @Override

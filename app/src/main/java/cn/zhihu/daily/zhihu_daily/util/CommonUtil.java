@@ -8,6 +8,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * Created by tommy on 12/10/16.
@@ -24,6 +27,12 @@ public class CommonUtil {
         Snackbar.make(rootView, text, Snackbar.LENGTH_SHORT).show();
     }
 
+    static public String getMD5(String message) throws NoSuchAlgorithmException {
+        MessageDigest messageDigest = MessageDigest.getInstance("MD5");
+        BigInteger bigInteger = new BigInteger(1, messageDigest.digest(message.getBytes()));
+        return bigInteger.toString(16);
+    }
+
     static public String StreamToString(InputStream inputStream) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         StringBuilder total = new StringBuilder();
@@ -33,4 +42,5 @@ public class CommonUtil {
         }
         return total.toString();
     }
+
 }

@@ -31,8 +31,10 @@ import cn.zhihu.daily.zhihu_daily.model.Summary;
 import cn.zhihu.daily.zhihu_daily.model.Theme;
 import cn.zhihu.daily.zhihu_daily.model.ThemeNews;
 import cn.zhihu.daily.zhihu_daily.model.TopStory;
+import cn.zhihu.daily.zhihu_daily.service.ImageProvider;
 import cn.zhihu.daily.zhihu_daily.ui.activity.StoryDetailActivity;
 import cn.zhihu.daily.zhihu_daily.ui.view.ViewPagerWithIndicator;
+import cn.zhihu.daily.zhihu_daily.util.CommonUtil;
 import cn.zhihu.daily.zhihu_daily.util.NetworkUtil;
 
 /**
@@ -46,6 +48,9 @@ public class ContentMainFragment extends Fragment {
     ThemeStoriesListAdapter themeStoriesListAdapter;
     StoriesListHandler listener;
     private LinearLayoutManager linearLayoutManager;
+
+    private ImageProvider imageProvider;
+
     public int themeId = Constant.THEME_HOME_ID;
 
     @Override
@@ -61,6 +66,7 @@ public class ContentMainFragment extends Fragment {
         linearLayoutManager = new LinearLayoutManager(getContext());
         contentList.setLayoutManager(linearLayoutManager);
         topStoriesViewPager = new ViewPagerWithIndicator(getContext());
+        imageProvider = new ImageProvider(getContext());
         contentListAdapter = new StoriesListAdapter(getContext(), topStoriesViewPager,
                 new ExtendStoriesListHandler() {
             @Override
@@ -144,24 +150,23 @@ public class ContentMainFragment extends Fragment {
                 }
             });
             ((TextView)item.findViewById(R.id.title)).setText(topStory.getTitle());
-            NetworkUtil.getImage(topStory.getImage(),
-                    ImageResponseHandlerFactory.createHandler(
-                            new BitmapContainer() {
-                                @Override
-                                public void setBitmap(Bitmap bitmap, int id) {
-                                    //do nothing;
-                                }
+            imageProvider.loadImage(topStory.getImage(), new BitmapContainer() {
+                @Override
+                public void setBitmap(Bitmap bitmap, int id) {
 
-                                @Override
-                                public void setBitmap(Bitmap bitmap) {
-                                    ((ImageView) item.findViewById(R.id.image)).setImageBitmap(bitmap);
-                                }
+                }
 
-                                @Override
-                                public Bitmap getBitmap() {
-                                    return null;
-                                }
-                            }, null, null));
+                @Override
+                public void setBitmap(Bitmap bitmap) {
+                    ((ImageView) item.findViewById(R.id.image)).setImageBitmap(bitmap);
+                }
+
+                @Override
+                public Bitmap getBitmap() {
+                    return null;
+                }
+            }, null, null);
+
             topStoryList.add(item);
         }
         PagerAdapter topStoriesAdapter = new TopStoriesAdapter(topStoryList);

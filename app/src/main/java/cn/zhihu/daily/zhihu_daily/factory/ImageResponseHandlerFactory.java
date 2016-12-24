@@ -11,6 +11,7 @@ import com.loopj.android.http.BinaryHttpResponseHandler;
 import java.util.Arrays;
 
 import cn.zhihu.daily.zhihu_daily.Interface.BitmapContainer;
+import cn.zhihu.daily.zhihu_daily.Interface.OnImageDownloaded;
 import cz.msebera.android.httpclient.Header;
 
 /**
@@ -18,9 +19,7 @@ import cz.msebera.android.httpclient.Header;
  */
 
 public class ImageResponseHandlerFactory {
-    static public BinaryHttpResponseHandler createHandler(final BitmapContainer imageContainer,
-                                                          @Nullable final BitmapContainer bitmapContainer,
-                                                          @Nullable final Integer id) {
+    static public BinaryHttpResponseHandler createHandler(final OnImageDownloaded onImageDownloaded) {
         return new BinaryHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] binaryData) {
@@ -29,13 +28,7 @@ public class ImageResponseHandlerFactory {
                     imageBitmap = Bitmap.createBitmap(imageBitmap, 0, 0, imageBitmap.getWidth(), 550);
                     Log.i("Get Image", "");
                 }
-                if (id == null)
-                    imageContainer.setBitmap(imageBitmap);
-                else
-                    imageContainer.setBitmap(imageBitmap, id);
-                if (bitmapContainer != null) {
-                    bitmapContainer.setBitmap(imageBitmap);
-                }
+                onImageDownloaded.Do(imageBitmap);
             }
 
             @Override

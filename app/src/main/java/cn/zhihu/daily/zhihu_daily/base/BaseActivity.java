@@ -4,9 +4,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import butterknife.ButterKnife;
+import cn.zhihu.daily.zhihu_daily.service.ImageProvider;
 
 public abstract class BaseActivity extends AppCompatActivity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -17,7 +17,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     protected void initVariables() {
-        //TODO: initialize Bmob and ConetentHelper
     }
 
     protected abstract int setLayout();

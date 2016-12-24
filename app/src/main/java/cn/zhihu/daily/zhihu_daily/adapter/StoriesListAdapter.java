@@ -23,8 +23,10 @@ import cn.zhihu.daily.zhihu_daily.R;
 import cn.zhihu.daily.zhihu_daily.global.Constant;
 import cn.zhihu.daily.zhihu_daily.factory.ImageResponseHandlerFactory;
 import cn.zhihu.daily.zhihu_daily.model.Summary;
+import cn.zhihu.daily.zhihu_daily.service.ImageProvider;
 import cn.zhihu.daily.zhihu_daily.ui.activity.StoryDetailActivity;
 import cn.zhihu.daily.zhihu_daily.ui.view.ViewPagerWithIndicator;
+import cn.zhihu.daily.zhihu_daily.util.CommonUtil;
 import cn.zhihu.daily.zhihu_daily.util.NetworkUtil;
 
 /**
@@ -47,6 +49,7 @@ public class StoriesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private String loadingDate;
     private ViewPagerWithIndicator topStores;
     private ExtendStoriesListHandler extendStoriesListHandler;
+    private ImageProvider imageProvider;
 
     public StoriesListAdapter(Context context, ViewPagerWithIndicator topStores,
                               ExtendStoriesListHandler extendStoriesListHandler) {
@@ -55,6 +58,7 @@ public class StoriesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         contentList = new ArrayList<>();
         this.extendStoriesListHandler = extendStoriesListHandler;
         isLoading = true;
+        imageProvider = new ImageProvider(context);
     }
 
     public StoriesListAdapter(Context context, ViewPagerWithIndicator topStores,
@@ -176,8 +180,7 @@ public class StoriesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 itemViewHolder.imageView.setImageBitmap(item.getBitmap());
             } else {
                 itemViewHolder.imageView.setImageResource(R.color.mainActivityBackground);
-                NetworkUtil.getImage(item.getImages().get(0),
-                        ImageResponseHandlerFactory.createHandler(itemViewHolder.getSelf(), item, itemViewHolder.id));
+                imageProvider.loadImage(item.getImages().get(0), itemViewHolder, item, itemViewHolder.id);
             }
             if (contentList.size() - 10 == position && !isLoading) {
                 isLoading = true;
