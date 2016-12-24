@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import java.io.FileOutputStream;
 
@@ -34,12 +35,15 @@ public class ImageProvider {
         try {
             md5 = CommonUtil.getMD5(url);
             Bitmap bitmap = BitmapFactory.decodeFile(imagePath + md5);
+            if (bitmap == null)
+                throw new NullPointerException();
+            Log.d("ImageProvider", "load image " + md5 + " success!");
             imageContainer.setBitmap(bitmap);
             if (id != null) {
                 bitmapContainer.setBitmap(bitmap, id);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             final String finalMd = md5;
             NetworkUtil.getImage(url,
                     ImageResponseHandlerFactory.createHandler(new OnImageDownloaded() {

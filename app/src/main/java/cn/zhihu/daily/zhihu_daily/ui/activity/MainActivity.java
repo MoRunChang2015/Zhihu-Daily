@@ -174,7 +174,7 @@ public class MainActivity extends BaseActivity {
                     break;
                 case Constant.THEME_CHANGE:
                     drawer.closeDrawers();
-                    Theme theme = (Theme) ((Object[])message.obj)[0];
+                    Theme theme = (Theme) message.obj;
                     // commonUtil.promptMsg("theme name is " + theme.getName());
                     if (theme.getId() != Constant.THEME_HOME_ID) {
                         newsService.getThemeNews(theme.getId(), handler);

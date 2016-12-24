@@ -38,7 +38,7 @@ public class StoryDetailActivity extends BaseActivity {
 
     private Detail detail;
 
-    private ImageProvider imageProvider = new ImageProvider(this);
+    private ImageProvider imageProvider;
 
     final String tag = "StoryDetailActivity";
 
@@ -64,6 +64,7 @@ public class StoryDetailActivity extends BaseActivity {
 
     @Override
     protected void initViews(Bundle savedInstanceState) {
+        imageProvider = new ImageProvider(this);
         commonUtil = new CommonUtil(findViewById(R.id.activity_story_detail));
         Intent intent = new Intent(StoryDetailActivity.this, NewsService.class);
         final int id = getIntent().getIntExtra("Detail", 0);
@@ -94,7 +95,7 @@ public class StoryDetailActivity extends BaseActivity {
             switch (message.what) {
                 case Constant.DOWNLOAD_NEWS_DETAIL_SUCCESS:
                     linearLayout.setVisibility(View.VISIBLE);
-                    Detail detail = (Detail)message.obj;
+                    Detail detail = (Detail) ((Object[])message.obj)[0];
                     titleTextView.setText(detail.getTitle());
                     imageSourceTextView.setText(detail.getImage_source());
                     if (detail.getImage() != null) {

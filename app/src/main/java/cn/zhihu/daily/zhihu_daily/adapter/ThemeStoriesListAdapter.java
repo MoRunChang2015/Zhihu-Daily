@@ -109,7 +109,7 @@ public class ThemeStoriesListAdapter extends RecyclerView.Adapter<RecyclerView.V
                     itemViewHolder.imageView.setImageBitmap(item.getBitmap());
                 } else {
                     itemViewHolder.imageView.setImageResource(R.color.mainActivityBackground);
-                    imageProvider.loadImage(item.getImages().get(0), itemViewHolder, item, itemViewHolder.id);
+                    imageProvider.loadImage(item.getImages().get(0), item, itemViewHolder, itemViewHolder.id);
                 }
             }
         }
