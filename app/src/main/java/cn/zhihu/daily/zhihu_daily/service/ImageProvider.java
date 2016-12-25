@@ -37,7 +37,7 @@ public class ImageProvider {
             Bitmap bitmap = BitmapFactory.decodeFile(imagePath + md5);
             if (bitmap == null)
                 throw new NullPointerException();
-            Log.d("ImageProvider", "load image " + md5 + " success!");
+            // Log.d("ImageProvider", "load image " + md5 + " success!");
             imageContainer.setBitmap(bitmap);
             if (id != null) {
                 bitmapContainer.setBitmap(bitmap, id);

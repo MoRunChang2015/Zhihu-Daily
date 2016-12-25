@@ -9,24 +9,21 @@ import android.util.Log;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 import cn.zhihu.daily.zhihu_daily.global.Constant;
 import cn.zhihu.daily.zhihu_daily.model.DailyNews;
-import cn.zhihu.daily.zhihu_daily.model.Summary;
+import cn.zhihu.daily.zhihu_daily.util.CommonUtil;
 
 /**
  * Created by tommy on 12/23/16.
  */
 public class DBNewsBefore {
 
-    private DatabaseHandler databaseHandler;
     private SQLiteDatabase writableDB, readableDB;
 
     public DBNewsBefore(Context context) {
-        databaseHandler = new DatabaseHandler(context);
+        DatabaseHandler databaseHandler = new DatabaseHandler(context);
         writableDB = databaseHandler.getWritableDatabase();
         readableDB = databaseHandler.getReadableDatabase();
     }
@@ -34,16 +31,9 @@ public class DBNewsBefore {
     public DailyNews getBeforeNewsAt(String date) {
         //  store the json corresponded to the date,
         //  while date is actually late 1 day to the json in the API
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(
-               Integer.parseInt(date.substring(0, 4)),
-               Integer.parseInt(date.substring(4, 6)) - 1,
-               Integer.parseInt(date.substring(6))
-        );
+        Calendar calendar = CommonUtil.formatDateToCalendar(date);
         calendar.add(Calendar.DATE, -1);
-        date = Integer.toString(calendar.get(Calendar.YEAR)) +
-                Integer.toString(calendar.get(Calendar.MONTH) + 1) +
-                Integer.toString(calendar.get(Calendar.DATE));
+        date = CommonUtil.getCurrentFormatDate(calendar);
 
         Log.d("Database", "Getting " + date);
 
@@ -67,7 +57,7 @@ public class DBNewsBefore {
     public void setBeforeNewsAt(String date, String json) {
         String SQLInsert =
                 "insert into news_before values (?, ?)";
-        writableDB.execSQL(SQLInsert, new String[] {date, json});
+        writableDB.execSQL(SQLInsert, new String[]{date, json});
     }
 
     private class DatabaseHandler extends SQLiteOpenHelper {

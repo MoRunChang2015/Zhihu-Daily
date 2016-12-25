@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.PagerAdapter;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -25,17 +26,13 @@ import cn.zhihu.daily.zhihu_daily.adapter.StoriesListAdapter;
 import cn.zhihu.daily.zhihu_daily.adapter.ThemeStoriesListAdapter;
 import cn.zhihu.daily.zhihu_daily.adapter.TopStoriesAdapter;
 import cn.zhihu.daily.zhihu_daily.global.Constant;
-import cn.zhihu.daily.zhihu_daily.factory.ImageResponseHandlerFactory;
 import cn.zhihu.daily.zhihu_daily.model.DailyNews;
 import cn.zhihu.daily.zhihu_daily.model.Summary;
-import cn.zhihu.daily.zhihu_daily.model.Theme;
 import cn.zhihu.daily.zhihu_daily.model.ThemeNews;
 import cn.zhihu.daily.zhihu_daily.model.TopStory;
 import cn.zhihu.daily.zhihu_daily.service.ImageProvider;
 import cn.zhihu.daily.zhihu_daily.ui.activity.StoryDetailActivity;
 import cn.zhihu.daily.zhihu_daily.ui.view.ViewPagerWithIndicator;
-import cn.zhihu.daily.zhihu_daily.util.CommonUtil;
-import cn.zhihu.daily.zhihu_daily.util.NetworkUtil;
 
 /**
  * Created by tommy on 12/16/16.
@@ -47,6 +44,8 @@ public class ContentMainFragment extends Fragment {
     StoriesListAdapter contentListAdapter;
     ThemeStoriesListAdapter themeStoriesListAdapter;
     StoriesListHandler listener;
+    SwipeRefreshLayout refreshLayout;
+
     private LinearLayoutManager linearLayoutManager;
 
     private ImageProvider imageProvider;
@@ -117,24 +116,20 @@ public class ContentMainFragment extends Fragment {
         }
     }
 
-    Handler mHandler = new Handler();
-
     public void scrollToTop() {
         contentList.smoothScrollToPosition(0);
-        mHandler.postDelayed(runnable, 100);
-    }
-
-    Runnable runnable = new Runnable() {
-        @Override
-        public void run() {
-            if (linearLayoutManager.findFirstVisibleItemPosition() < 3) {
-                return;
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (linearLayoutManager.findFirstVisibleItemPosition() < 3) {
+                    return;
+                }
+                contentList.stopScroll();
+                contentList.scrollToPosition(1);
+                contentList.smoothScrollToPosition(0);
             }
-            contentList.stopScroll();
-            contentList.scrollToPosition(1);
-            contentList.smoothScrollToPosition(0);
-        }
-    };
+        }, 200);
+    }
 
     public void setDailyNews(DailyNews dailyNews) {
         LayoutInflater inflater = LayoutInflater.from(getContext());

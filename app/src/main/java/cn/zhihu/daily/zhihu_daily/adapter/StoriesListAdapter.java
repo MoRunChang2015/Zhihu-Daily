@@ -21,13 +21,11 @@ import cn.zhihu.daily.zhihu_daily.Interface.BitmapContainer;
 import cn.zhihu.daily.zhihu_daily.Interface.ExtendStoriesListHandler;
 import cn.zhihu.daily.zhihu_daily.R;
 import cn.zhihu.daily.zhihu_daily.global.Constant;
-import cn.zhihu.daily.zhihu_daily.factory.ImageResponseHandlerFactory;
 import cn.zhihu.daily.zhihu_daily.model.Summary;
 import cn.zhihu.daily.zhihu_daily.service.ImageProvider;
 import cn.zhihu.daily.zhihu_daily.ui.activity.StoryDetailActivity;
 import cn.zhihu.daily.zhihu_daily.ui.view.ViewPagerWithIndicator;
 import cn.zhihu.daily.zhihu_daily.util.CommonUtil;
-import cn.zhihu.daily.zhihu_daily.util.NetworkUtil;
 
 /**
  * Created by tommy on 12/12/16.
@@ -67,7 +65,7 @@ public class StoriesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         this.contentList = contentList;
         this.context = context;
         this.extendStoriesListHandler = extendStoriesListHandler;
-        today = formatDateToCalendar(contentList.get(0).getDate());
+        today = CommonUtil.formatDateToCalendar(contentList.get(0).getDate());
     }
 
     public void addStoriesList(List<Summary> list) {
@@ -76,7 +74,7 @@ public class StoriesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         contentList.addAll(list);
 
         if (today == null)
-            today = formatDateToCalendar(contentList.get(0).getDate());
+            today = CommonUtil.formatDateToCalendar(contentList.get(0).getDate());
         notifyDataSetChanged();
     }
 
@@ -93,31 +91,11 @@ public class StoriesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             return "今日";
     }
 
-    private String getCurrentFormatDate() {
-        return Integer.toString(calendar.get(Calendar.YEAR)) +
-                (calendar.get(Calendar.MONTH) + 1 < 10 ? "0":"") +
-                Integer.toString(calendar.get(Calendar.MONTH) + 1) +
-                (calendar.get(Calendar.DATE) < 10 ? "0":"") +
-                Integer.toString(calendar.get(Calendar.DATE));
-    }
-
     private String FormatDateToShowingDate(String date) {
         return date.substring(0, 4) + "年" +
                 Integer.toString(Integer.parseInt(date.substring(4, 6))) + "月" +
                 Integer.toString(Integer.parseInt(date.substring(6, 8))) + "日";
     }
-
-    private Calendar formatDateToCalendar(String date) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
-        Calendar calendar = Calendar.getInstance();
-        try {
-            calendar.setTime(simpleDateFormat.parse(date));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return calendar;
-    }
-
 
     @Override
     public int getItemViewType(int position) {
@@ -158,7 +136,7 @@ public class StoriesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         if (firstPosition == -1)
             return;
         if (contentList.get(firstPosition).getDate() != null) {
-            Calendar temp = formatDateToCalendar(contentList.get(firstPosition).getDate());
+            Calendar temp = CommonUtil.formatDateToCalendar(contentList.get(firstPosition).getDate());
             if (calendar.before(temp) || calendar.after(temp)) {
                 calendar.setTime(temp.getTime());
                 extendStoriesListHandler.onDateChange(getCurrentShowingDate());
@@ -184,7 +162,7 @@ public class StoriesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             }
             if (contentList.size() - 10 == position && !isLoading) {
                 isLoading = true;
-                loadingDate = getCurrentFormatDate();
+                loadingDate = CommonUtil.getCurrentFormatDate(calendar);
                 extendStoriesListHandler.onEnd(loadingDate);
             }
             checkDateChange();

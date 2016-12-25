@@ -11,6 +11,10 @@ import java.io.InputStreamReader;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 
 /**
  * Created by tommy on 12/10/16.
@@ -31,6 +35,25 @@ public class CommonUtil {
         MessageDigest messageDigest = MessageDigest.getInstance("MD5");
         BigInteger bigInteger = new BigInteger(1, messageDigest.digest(message.getBytes()));
         return bigInteger.toString(16);
+    }
+
+    static public String getCurrentFormatDate(Calendar calendar) {
+        return Integer.toString(calendar.get(Calendar.YEAR)) +
+                (calendar.get(Calendar.MONTH) + 1 < 10 ? "0":"") +
+                Integer.toString(calendar.get(Calendar.MONTH) + 1) +
+                (calendar.get(Calendar.DATE) < 10 ? "0":"") +
+                Integer.toString(calendar.get(Calendar.DATE));
+    }
+
+    static public Calendar formatDateToCalendar(String date) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
+        Calendar calendar = Calendar.getInstance();
+        try {
+            calendar.setTime(simpleDateFormat.parse(date));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return calendar;
     }
 
     static public String StreamToString(InputStream inputStream) throws IOException {
