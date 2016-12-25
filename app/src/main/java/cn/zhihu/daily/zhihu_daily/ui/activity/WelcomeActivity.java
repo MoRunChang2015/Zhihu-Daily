@@ -8,6 +8,8 @@ import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 
+import java.io.File;
+
 import butterknife.BindView;
 import cn.zhihu.daily.zhihu_daily.R;
 import cn.zhihu.daily.zhihu_daily.base.BaseActivity;
@@ -26,6 +28,8 @@ public class WelcomeActivity extends BaseActivity {
 
     @Override
     protected void initViews(Bundle savedInstanceState) {
+        File file = new File(getFilesDir().getPath() + "/images/");
+        file.mkdir();
         startAnimation(background, logo);
     }
 

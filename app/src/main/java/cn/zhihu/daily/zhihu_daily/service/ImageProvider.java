@@ -7,6 +7,7 @@ import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import java.io.File;
 import java.io.FileOutputStream;
 
 import cn.zhihu.daily.zhihu_daily.Interface.BitmapContainer;
@@ -25,12 +26,12 @@ public class ImageProvider {
     private Context context;
     public ImageProvider(Context context) {
         this.context = context;
-        imagePath = context.getFilesDir().getPath() + "/";
+        imagePath = context.getFilesDir().getPath() + "/images/";
     }
     public void loadImage(String url,
-                                 final BitmapContainer imageContainer,
-                                 @Nullable final BitmapContainer bitmapContainer,
-                                 @Nullable final Integer id) {
+                          final BitmapContainer imageContainer,
+                          @Nullable final Integer id,
+                          @Nullable final BitmapContainer bitmapContainer) {
         String md5 = "";
         try {
             md5 = CommonUtil.getMD5(url);
@@ -38,9 +39,13 @@ public class ImageProvider {
             if (bitmap == null)
                 throw new NullPointerException();
             // Log.d("ImageProvider", "load image " + md5 + " success!");
-            imageContainer.setBitmap(bitmap);
             if (id != null) {
-                bitmapContainer.setBitmap(bitmap, id);
+                imageContainer.setBitmap(bitmap, id);
+            } else {
+                imageContainer.setBitmap(bitmap);
+            }
+            if (bitmapContainer != null) {
+                bitmapContainer.setBitmap(bitmap);
             }
         } catch (Exception e) {
             //e.printStackTrace();
@@ -49,11 +54,15 @@ public class ImageProvider {
                     ImageResponseHandlerFactory.createHandler(new OnImageDownloaded() {
                         @Override
                         public void Do(Bitmap bitmap) {
-                            imageContainer.setBitmap(bitmap);
                             if (id != null) {
-                                bitmapContainer.setBitmap(bitmap, id);
+                                imageContainer.setBitmap(bitmap, id);
+                            } else {
+                                imageContainer.setBitmap(bitmap);
                             }
-                            try (FileOutputStream out = context.openFileOutput(finalMd, Context.MODE_PRIVATE)) {
+                            if (bitmapContainer != null) {
+                                bitmapContainer.setBitmap(bitmap);
+                            }
+                            try (FileOutputStream out = new FileOutputStream(new File(imagePath, finalMd))) {
                                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
                             } catch (Exception e) {
                                 e.printStackTrace();

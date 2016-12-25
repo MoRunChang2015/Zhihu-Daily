@@ -8,7 +8,7 @@
         android:id="@+id/activity_story_detail"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="cn.zhihu.daily.zhihu_daily.ui.activity.StoryDetailActivity"
+        tools:mContext="cn.zhihu.daily.zhihu_daily.ui.activity.StoryDetailActivity"
         android:orientation="vertical">
 
         <FrameLayout

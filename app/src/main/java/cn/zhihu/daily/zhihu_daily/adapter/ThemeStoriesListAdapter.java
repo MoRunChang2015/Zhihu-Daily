@@ -6,7 +6,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,11 +14,9 @@ import java.util.List;
 
 import cn.zhihu.daily.zhihu_daily.Interface.BitmapContainer;
 import cn.zhihu.daily.zhihu_daily.R;
-import cn.zhihu.daily.zhihu_daily.factory.ImageResponseHandlerFactory;
 import cn.zhihu.daily.zhihu_daily.model.Summary;
 import cn.zhihu.daily.zhihu_daily.model.ThemeNews;
 import cn.zhihu.daily.zhihu_daily.service.ImageProvider;
-import cn.zhihu.daily.zhihu_daily.util.NetworkUtil;
 
 /**
  * Created by morc on 16-12-20.
@@ -109,7 +106,7 @@ public class ThemeStoriesListAdapter extends RecyclerView.Adapter<RecyclerView.V
                     itemViewHolder.imageView.setImageBitmap(item.getBitmap());
                 } else {
                     itemViewHolder.imageView.setImageResource(R.color.mainActivityBackground);
-                    imageProvider.loadImage(item.getImages().get(0), item, itemViewHolder, itemViewHolder.id);
+                    imageProvider.loadImage(item.getImages().get(0), itemViewHolder, itemViewHolder.id, item);
                 }
             }
         }

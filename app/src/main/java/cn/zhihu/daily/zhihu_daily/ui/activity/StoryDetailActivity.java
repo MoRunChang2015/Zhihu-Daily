@@ -24,12 +24,10 @@ import cn.zhihu.daily.zhihu_daily.R;
 import cn.zhihu.daily.zhihu_daily.base.BaseActivity;
 import cn.zhihu.daily.zhihu_daily.global.Config;
 import cn.zhihu.daily.zhihu_daily.global.Constant;
-import cn.zhihu.daily.zhihu_daily.factory.ImageResponseHandlerFactory;
 import cn.zhihu.daily.zhihu_daily.model.Detail;
 import cn.zhihu.daily.zhihu_daily.service.ImageProvider;
 import cn.zhihu.daily.zhihu_daily.service.NewsService;
 import cn.zhihu.daily.zhihu_daily.util.CommonUtil;
-import cn.zhihu.daily.zhihu_daily.util.NetworkUtil;
 
 public class StoryDetailActivity extends BaseActivity {
 
@@ -114,7 +112,7 @@ public class StoryDetailActivity extends BaseActivity {
                             public Bitmap getBitmap() {
                                 return null;
                             }
-                        }, detail, null);
+                        }, null, detail);
                     } else {
                         FrameLayout frameLayout = (FrameLayout)findViewById(R.id.detail_top_image_frameLayout);
                         ViewGroup viewGroup = (ViewGroup)frameLayout.getParent();

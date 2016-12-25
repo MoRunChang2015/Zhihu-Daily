@@ -10,12 +10,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
 
 import cn.zhihu.daily.zhihu_daily.Interface.BitmapContainer;
 import cn.zhihu.daily.zhihu_daily.Interface.ExtendStoriesListHandler;
@@ -158,7 +155,7 @@ public class StoriesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 itemViewHolder.imageView.setImageBitmap(item.getBitmap());
             } else {
                 itemViewHolder.imageView.setImageResource(R.color.mainActivityBackground);
-                imageProvider.loadImage(item.getImages().get(0), item, itemViewHolder,  itemViewHolder.id);
+                imageProvider.loadImage(item.getImages().get(0), itemViewHolder, itemViewHolder.id, item);
             }
             if (contentList.size() - 10 == position && !isLoading) {
                 isLoading = true;

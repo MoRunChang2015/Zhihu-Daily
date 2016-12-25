@@ -48,24 +48,28 @@ public class ContentMainFragment extends Fragment {
 
     private LinearLayoutManager linearLayoutManager;
 
-    private ImageProvider imageProvider;
-
     public int themeId = Constant.THEME_HOME_ID;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.content_main, container);
+        refreshLayout = (SwipeRefreshLayout)inflater.inflate(R.layout.content_main, container);
+        return refreshLayout;
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshLayout.setRefreshing(false);
+            }
+        });
         contentList = (RecyclerView) getActivity().findViewById(R.id.story_list);
         linearLayoutManager = new LinearLayoutManager(getContext());
         contentList.setLayoutManager(linearLayoutManager);
         topStoriesViewPager = new ViewPagerWithIndicator(getContext());
-        imageProvider = new ImageProvider(getContext());
         contentListAdapter = new StoriesListAdapter(getContext(), topStoriesViewPager,
                 new ExtendStoriesListHandler() {
             @Override
@@ -132,39 +136,40 @@ public class ContentMainFragment extends Fragment {
     }
 
     public void setDailyNews(DailyNews dailyNews) {
-        LayoutInflater inflater = LayoutInflater.from(getContext());
-        List<View> topStoryList = new ArrayList<>();
-        for (final TopStory topStory: dailyNews.getTop_stories()) {
-            final View item = inflater.inflate(R.layout.top_story_item, topStoriesViewPager.getPagesRoot(), false);
-            item.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(getContext(), StoryDetailActivity.class);
-                    intent.putExtra("Detail", topStory.getId());
-                    getContext().startActivity(intent);
-                }
-            });
-            ((TextView)item.findViewById(R.id.title)).setText(topStory.getTitle());
-            imageProvider.loadImage(topStory.getImage(), new BitmapContainer() {
-                @Override
-                public void setBitmap(Bitmap bitmap, int id) {
-
-                }
-
-                @Override
-                public void setBitmap(Bitmap bitmap) {
-                    ((ImageView) item.findViewById(R.id.image)).setImageBitmap(bitmap);
-                }
-
-                @Override
-                public Bitmap getBitmap() {
-                    return null;
-                }
-            }, null, null);
-
-            topStoryList.add(item);
-        }
-        PagerAdapter topStoriesAdapter = new TopStoriesAdapter(topStoryList);
+//        LayoutInflater inflater = LayoutInflater.from(getContext());
+//        List<View> topStoryList = new ArrayList<>();
+//        for (final TopStory topStory: dailyNews.getTop_stories()) {
+//            final View item = inflater.inflate(R.layout.top_story_item, topStoriesViewPager.getPagesRoot(), false);
+//            item.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    Intent intent = new Intent(getContext(), StoryDetailActivity.class);
+//                    intent.putExtra("Detail", topStory.getId());
+//                    getContext().startActivity(intent);
+//                }
+//            });
+//            ((TextView)item.findViewById(R.id.title)).setText(topStory.getTitle());
+//            imageProvider.loadImage(topStory.getImage(), new BitmapContainer() {
+//                @Override
+//                public void setBitmap(Bitmap bitmap, int id) {
+//
+//                }
+//
+//                @Override
+//                public void setBitmap(Bitmap bitmap) {
+//                    ((ImageView) item.findViewById(R.id.image)).setImageBitmap(bitmap);
+//                }
+//
+//                @Override
+//                public Bitmap getBitmap() {
+//                    return null;
+//                }
+//            }, null, null);
+//
+//            topStoryList.add(item);
+//        }
+        TopStoriesAdapter topStoriesAdapter = new TopStoriesAdapter(getContext(), topStoriesViewPager);
+        topStoriesAdapter.setContent(dailyNews.getTop_stories());
         topStoriesViewPager.setAdapter(topStoriesAdapter);
         contentListAdapter.addStoriesList(dailyNews.getStories());
     }
