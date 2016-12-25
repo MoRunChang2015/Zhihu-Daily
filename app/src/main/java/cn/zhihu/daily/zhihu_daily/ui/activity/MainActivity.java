@@ -198,7 +198,11 @@ public class MainActivity extends BaseActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        unbindService(sc);
+        try {
+            unbindService(sc);
+        } catch (IllegalArgumentException e) {
+
+        }
     }
 
     @Override

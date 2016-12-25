@@ -31,7 +31,7 @@ public class ImageProvider {
                                  final BitmapContainer imageContainer,
                                  @Nullable final BitmapContainer bitmapContainer,
                                  @Nullable final Integer id) {
-        String md5 = "1";
+        String md5 = "";
         try {
             md5 = CommonUtil.getMD5(url);
             Bitmap bitmap = BitmapFactory.decodeFile(imagePath + md5);
