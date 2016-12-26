@@ -54,7 +54,7 @@ public class StoriesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         this.topStores = topStores;
         contentList = new ArrayList<>();
         this.extendStoriesListHandler = extendStoriesListHandler;
-        isLoading = true;
+        //isLoading = true;
         imageProvider = new ImageProvider(context);
     }
 

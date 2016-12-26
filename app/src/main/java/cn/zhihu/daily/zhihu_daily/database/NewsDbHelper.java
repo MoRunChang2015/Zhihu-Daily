@@ -83,6 +83,35 @@ public class NewsDbHelper {
         return detail;
     }
 
+    public void setLatestNews(String date, String json) {
+        String SQLQuery = "select * from latest_news";
+        try (Cursor sqlResult = readableDB.rawQuery(SQLQuery, null)) {
+            if (sqlResult.moveToFirst()) {
+                String SQLUpdate = "update latest_news SET date = ? , json = ?";
+                writableDB.execSQL(SQLUpdate, new Object[]{date, json});
+            } else {
+                String SQLInsert = "insert into latest_news values (?, ?)";
+                writableDB.execSQL(SQLInsert, new Object[]{date, json});
+            }
+        }
+    }
+
+    public DailyNews getLatestNews(String date) {
+        String SQLQuery = "select * from latest_news where date = " + date;
+        DailyNews result = null;
+        try (Cursor sqlResult = readableDB.rawQuery(SQLQuery, null)) {
+            if (sqlResult.moveToFirst()) {
+                String json = sqlResult.getString(1);
+                try {
+                    result = JSON.parseObject(json, DailyNews.class);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return result;
+    }
+
     private class DatabaseHandler extends SQLiteOpenHelper {
 
         DatabaseHandler(Context context) {
@@ -101,8 +130,13 @@ public class NewsDbHelper {
                             "json TEXT," +
                             "PRIMARY KEY(id) " +
                             ");";
+
+            String SQLCreateLatestNewsTable = "CREATE TABLE IF NOT EXISTS latest_news (" +
+                            "date CHAR(8), " +
+                            "json TEXT);";
             sqLiteDatabase.execSQL(SQLCreateBeforeNewsTable);
             sqLiteDatabase.execSQL(SQLCreateNewsDetailTable);
+            sqLiteDatabase.execSQL(SQLCreateLatestNewsTable);
         }
 
         @Override

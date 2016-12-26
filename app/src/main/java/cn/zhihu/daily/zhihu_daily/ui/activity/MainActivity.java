@@ -79,10 +79,8 @@ public class MainActivity extends BaseActivity {
 
         if (!NetworkUtil.isNetworkAvailable(this))
             commonUtil.promptMsg("Network is not available");
-        else {
-            Intent intent = new Intent(MainActivity.this, NewsService.class);
-            bindService(intent, sc, BIND_AUTO_CREATE);
-        }
+        Intent intent = new Intent(MainActivity.this, NewsService.class);
+        bindService(intent, sc, BIND_AUTO_CREATE);
         contentMainFragment = (ContentMainFragment)getFragmentManager().
                 findFragmentById(R.id.content_main);
         contentMainFragment.setOnListMovedToEndListener(new StoriesListHandler() {
@@ -143,7 +141,7 @@ public class MainActivity extends BaseActivity {
             super.handleMessage(message);
             switch (message.what) {
                 case Constant.DOWNLOAD_LATEST_NEWS_SUCCESS:
-                    DailyNews dailyNews = (DailyNews)((Object[])message.obj)[0];
+                    DailyNews dailyNews = (DailyNews)message.obj;
                     dailyNews.getStories().add(0, new Summary());
                     for (Summary summary: dailyNews.getStories()) {
                         summary.setDate(dailyNews.getDate());
@@ -190,12 +188,34 @@ public class MainActivity extends BaseActivity {
                     contentMainFragment.changeTheme(theme.getId());
                     break;
                 case Constant.NETWORK_ERROR_NEED_RETRY:
-                    contentMainFragment.getBeforeStoriesFail();
+                    handler.postDelayed(beforeNewsRetry, 2000);
                     // commonUtil.promptMsg("Network Error...retrying...");
+                    break;
+                case Constant.NO_AVAILABLE_NETWORK:
+                    contentMainFragment.stopLoading();
+                    commonUtil.promptMsg("No Available network");
+                    break;
+
+                case  Constant.NETWORK_ERROR_NEED_RETRY_THEME_LIST:
+                    handler.postDelayed(themeListRetry, 2000);
                     break;
                 default:
                     break;
             }
+        }
+    };
+
+    Runnable beforeNewsRetry = new Runnable() {
+        @Override
+        public void run() {
+            contentMainFragment.getBeforeStoriesFail();
+        }
+    };
+
+    Runnable themeListRetry = new Runnable() {
+        @Override
+        public void run() {
+            newsService.getThemeList(handler);
         }
     };
 
@@ -205,7 +225,7 @@ public class MainActivity extends BaseActivity {
         try {
             unbindService(sc);
         } catch (IllegalArgumentException e) {
-
+            e.printStackTrace();
         }
     }
 

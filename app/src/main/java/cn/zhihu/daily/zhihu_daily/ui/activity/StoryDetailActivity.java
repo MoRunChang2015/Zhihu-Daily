@@ -133,6 +133,10 @@ public class StoryDetailActivity extends BaseActivity {
                     setWebContent(detail);
                     // commonUtil.promptMsg("Download news Detail Success");
                     break;
+                case Constant.NO_AVAILABLE_NETWORK:
+                case Constant.NETWORK_ERROR:
+                    commonUtil.promptMsg("No Available Network");
+                    break;
                 default:
                     break;
             }

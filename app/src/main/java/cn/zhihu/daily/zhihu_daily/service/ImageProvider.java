@@ -20,9 +20,11 @@ import cn.zhihu.daily.zhihu_daily.util.NetworkUtil;
 
 public class ImageProvider {
     private String imagePath;
+    private Context context;
 
     public ImageProvider(Context context) {
         imagePath = context.getFilesDir().getPath() + "/images/";
+        this.context = context;
     }
     public void loadImage(String url,
                           final BitmapContainer imageContainer,
@@ -46,6 +48,8 @@ public class ImageProvider {
         } catch (Exception e) {
             //e.printStackTrace();
             final String finalMd = md5;
+            if (!NetworkUtil.isNetworkAvailable(context))
+                return;
             NetworkUtil.getImage(url,
                     ImageResponseHandlerFactory.createHandler(new OnImageDownloaded() {
                         @Override

@@ -132,9 +132,13 @@ public class ContentMainFragment extends Fragment {
         }, 200);
     }
 
+    public void stopLoading() {
+        refreshLayout.setRefreshing(false);
+    }
+
     public void setDailyNews(DailyNews dailyNews) {
+        refreshLayout.setRefreshing(false);
         topStoriesViewPager.setContent(dailyNews.getTop_stories());
         contentListAdapter.updateDailyNews(dailyNews.getStories());
-        refreshLayout.setRefreshing(false);
     }
 }

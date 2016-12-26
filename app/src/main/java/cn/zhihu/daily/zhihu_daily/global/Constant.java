@@ -28,6 +28,10 @@ public interface Constant {
 
     int NETWORK_ERROR_NEED_RETRY = -3;
 
+    int NO_AVAILABLE_NETWORK = -4;
+
+    int NETWORK_ERROR_NEED_RETRY_THEME_LIST = -5;
+
     int DOWNLOAD_LATEST_NEWS_SUCCESS = 1;
 
     int DOWNLOAD_NEWS_DETAIL_SUCCESS = 2;
