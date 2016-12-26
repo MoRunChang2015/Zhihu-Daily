@@ -6,14 +6,13 @@ import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
-import android.util.Log;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import cn.zhihu.daily.zhihu_daily.database.DBNewsBefore;
+import cn.zhihu.daily.zhihu_daily.database.NewsDbHelper;
 import cn.zhihu.daily.zhihu_daily.global.Constant;
 import cn.zhihu.daily.zhihu_daily.factory.JsonResponseHandlerFactory;
 import cn.zhihu.daily.zhihu_daily.model.DailyNews;
@@ -26,14 +25,14 @@ import cz.msebera.android.httpclient.Header;
 public class NewsService extends Service {
     final String tag = "NewsService";
     private final IBinder binder = new MyBinder();
-    private DBNewsBefore dbNewsBefore;
+    private NewsDbHelper newsDbHelper;
     public NewsService() {
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
-        dbNewsBefore = new DBNewsBefore(getApplicationContext());
+        newsDbHelper = new NewsDbHelper(getApplicationContext());
     }
 
 
@@ -74,12 +73,39 @@ public class NewsService extends Service {
 
 
     public void getNewsDetail(int id, final Handler handler) {
-        NetworkUtil.getNewsDetail(id, JsonResponseHandlerFactory.createHandler(Detail.class, handler,
+        Detail detail = newsDbHelper.getNewsDetail(id);
+        if (detail != null) {
+            Message message = new Message();
+            message.obj = detail;
+            message.what = Constant.DOWNLOAD_NEWS_DETAIL_SUCCESS;
+            handler.sendMessage(message);
+            return;
+        }
+
+        Handler newsServiceHandler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                switch (msg.what) {
+                    case Constant.DOWNLOAD_NEWS_DETAIL_SUCCESS:
+                        Object[] objects = (Object[])msg.obj;
+                        Detail res = (Detail) objects[0];
+                        String json = (String)objects[1];
+                        newsDbHelper.setNewsDetail(res.getId(), json);
+                        Message message = new Message();
+                        message.obj = objects[0];
+                        message.what = msg.what;
+                        handler.sendMessage(message);
+                }
+            }
+        };
+
+        NetworkUtil.getNewsDetail(id, JsonResponseHandlerFactory.createHandler(Detail.class, newsServiceHandler,
                 Constant.DOWNLOAD_NEWS_DETAIL_SUCCESS, Constant.NETWORK_ERROR, Constant.JSON_PARSE_ERROR));
     }
 
     public void getBeforeNews(String date, final Handler handler) {
-        DailyNews beforeNews = dbNewsBefore.getBeforeNewsAt(date);
+        DailyNews beforeNews = newsDbHelper.getBeforeNewsAt(date);
         if (beforeNews  != null) {
             Message msg = new Message();
             msg.obj = beforeNews;
@@ -97,7 +123,7 @@ public class NewsService extends Service {
                         Object[] objects = (Object[])msg.obj;
                         DailyNews dailyNews = (DailyNews) objects[0];
                         String json = (String)objects[1];
-                        dbNewsBefore.setBeforeNewsAt(dailyNews.getDate(), json);
+                        newsDbHelper.setBeforeNewsAt(dailyNews.getDate(), json);
                         Message message = new Message();
                         message.obj = objects[0];
                         message.what = msg.what;

@@ -13,16 +13,17 @@ import java.util.Calendar;
 
 import cn.zhihu.daily.zhihu_daily.global.Constant;
 import cn.zhihu.daily.zhihu_daily.model.DailyNews;
+import cn.zhihu.daily.zhihu_daily.model.Detail;
 import cn.zhihu.daily.zhihu_daily.util.CommonUtil;
 
 /**
  * Created by tommy on 12/23/16.
  */
-public class DBNewsBefore {
+public class NewsDbHelper {
 
     private SQLiteDatabase writableDB, readableDB;
 
-    public DBNewsBefore(Context context) {
+    public NewsDbHelper(Context context) {
         DatabaseHandler databaseHandler = new DatabaseHandler(context);
         writableDB = databaseHandler.getWritableDatabase();
         readableDB = databaseHandler.getReadableDatabase();
@@ -60,6 +61,28 @@ public class DBNewsBefore {
         writableDB.execSQL(SQLInsert, new String[]{date, json});
     }
 
+    public void setNewsDetail(int id, String json) {
+        String SQLInsert = "insert into news_detail values (?, ?)";
+        writableDB.execSQL(SQLInsert, new Object[]{id, json});
+    }
+
+    public Detail getNewsDetail(int id) {
+        Log.d("Getting news detail", Integer.toString(id));
+        String SQLQuery = "Select * from news_detail where id = " + Integer.toString(id);
+        Detail detail = null;
+        try (Cursor result = readableDB.rawQuery(SQLQuery, null)) {
+            if (result.moveToFirst()) {
+                String json = result.getString(1);
+                try {
+                    detail = JSON.parseObject(json, Detail.class);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return detail;
+    }
+
     private class DatabaseHandler extends SQLiteOpenHelper {
 
         DatabaseHandler(Context context) {
@@ -67,13 +90,19 @@ public class DBNewsBefore {
         }
         @Override
         public void onCreate(SQLiteDatabase sqLiteDatabase) {
-            String SQLCreateTable =
+            String SQLCreateBeforeNewsTable =
                     "CREATE TABLE IF NOT EXISTS news_before (" +
                             "date CHAR(8), " +
                             "json TEXT, " +
                             "PRIMARY KEY(date) " +
-                            ")";
-            sqLiteDatabase.execSQL(SQLCreateTable);
+                            ");";
+            String SQLCreateNewsDetailTable = "CREATE TABLE IF NOT EXISTS news_detail (" +
+                            "id INT, " +
+                            "json TEXT," +
+                            "PRIMARY KEY(id) " +
+                            ");";
+            sqLiteDatabase.execSQL(SQLCreateBeforeNewsTable);
+            sqLiteDatabase.execSQL(SQLCreateNewsDetailTable);
         }
 
         @Override

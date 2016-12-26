@@ -11,6 +11,7 @@ import android.os.Message;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebResourceRequest;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
@@ -82,6 +83,17 @@ public class StoryDetailActivity extends BaseActivity {
             }
         };
         bindService(intent, sc, BIND_AUTO_CREATE);
+
+        WebSettings webSettings = contentDetailWebView.getSettings();
+
+        webSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+        webSettings.setDomStorageEnabled(true);
+        webSettings.setDatabaseEnabled(true);
+
+        String cachePath = getFilesDir().getPath() + "/newsDetail/";
+
+        webSettings.setAppCachePath(cachePath);
+        webSettings.setAppCacheEnabled(true);
     }
 
     private ServiceConnection sc;
@@ -93,7 +105,7 @@ public class StoryDetailActivity extends BaseActivity {
             switch (message.what) {
                 case Constant.DOWNLOAD_NEWS_DETAIL_SUCCESS:
                     linearLayout.setVisibility(View.VISIBLE);
-                    Detail detail = (Detail) ((Object[])message.obj)[0];
+                    Detail detail = (Detail)message.obj;
                     titleTextView.setText(detail.getTitle());
                     imageSourceTextView.setText(detail.getImage_source());
                     if (detail.getImage() != null) {
