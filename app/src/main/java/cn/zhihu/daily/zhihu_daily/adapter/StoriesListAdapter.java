@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.LinkedList;
 import java.util.List;
 
 import cn.zhihu.daily.zhihu_daily.Interface.BitmapContainer;
@@ -56,16 +58,24 @@ public class StoriesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         imageProvider = new ImageProvider(context);
     }
 
-    public StoriesListAdapter(Context context, ViewPagerWithIndicator topStores,
-                              List<Summary> contentList, ExtendStoriesListHandler extendStoriesListHandler) {
-        this.topStores = topStores;
-        this.contentList = contentList;
-        this.context = context;
-        this.extendStoriesListHandler = extendStoriesListHandler;
-        today = CommonUtil.formatDateToCalendar(contentList.get(0).getDate());
+    public void updateDailyNews(List<Summary> list) {
+        if (contentList.size() == 0) {
+            contentList.addAll(list);
+        } else {
+            List<Summary> tmpList = new ArrayList<>();
+            for (int i = 1; i < list.size(); i++) {
+                if (list.get(i).getId() == contentList.get(1).getId()) {
+                    break;
+                }
+                tmpList.add(list.get(i));
+            }
+            contentList.addAll(1, tmpList);
+        }
+        notifyDataSetChanged();
+        isLoading = false;
     }
 
-    public void addStoriesList(List<Summary> list) {
+    public void appendStories(List<Summary> list) {
         isLoading = false;
 
         contentList.addAll(list);
@@ -77,7 +87,7 @@ public class StoriesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
 
     public void getBeforeStoriesFail() {
-        extendStoriesListHandler.onEnd(loadingDate);
+        extendStoriesListHandler.getBeforeNews(loadingDate);
     }
 
     private String getCurrentShowingDate() {
@@ -96,7 +106,7 @@ public class StoriesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public int getItemViewType(int position) {
-        if (position == 0 && getItemCount() > 1) {
+        if (position == 0) {
             return TYPE_TOP_STORY;
         }
         if (position == getItemCount() - 1) {
@@ -144,6 +154,11 @@ public class StoriesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
         if (position == getItemCount() - 1) {
+            if (!isLoading) {
+                isLoading = true;
+                loadingDate = CommonUtil.getCurrentFormatDate(calendar);
+                extendStoriesListHandler.getBeforeNews(loadingDate);
+            }
             return;
         }
         Summary item = contentList.get(position);
@@ -157,11 +172,6 @@ public class StoriesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 itemViewHolder.imageView.setImageResource(R.color.mainActivityBackground);
                 imageProvider.loadImage(item.getImages().get(0), itemViewHolder, itemViewHolder.id, item);
             }
-            if (contentList.size() - 10 == position && !isLoading) {
-                isLoading = true;
-                loadingDate = CommonUtil.getCurrentFormatDate(calendar);
-                extendStoriesListHandler.onEnd(loadingDate);
-            }
             checkDateChange();
         } else if (holder.getItemViewType() == TYPE_DATE) {
             StoryListDateViewHolder dateViewHolder = (StoryListDateViewHolder)holder;
@@ -172,6 +182,9 @@ public class StoriesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public int getItemCount() {
+        if (contentList.size() == 0) {
+            return 0;
+        }
         return contentList.size() + 1;
     }
 }
@@ -206,10 +219,6 @@ class StoryListItemViewHolder extends RecyclerView.ViewHolder implements BitmapC
                 context.startActivity(intent);
             }
         });
-    }
-
-    StoryListItemViewHolder getSelf() {
-        return this;
     }
 
     @Override

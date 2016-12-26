@@ -5,7 +5,7 @@ package cn.zhihu.daily.zhihu_daily.Interface;
  */
 
 public interface StoriesListHandler {
-    void onEnd(String date);
-
+    void getBeforeNews(String date);
+    void getDailyNews();
     void onDateChange(String date);
 }

@@ -19,7 +19,6 @@ import android.content.ServiceConnection;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
-import android.util.Log;
 
 import butterknife.BindView;
 import cn.zhihu.daily.zhihu_daily.Interface.StoriesListHandler;
@@ -88,10 +87,15 @@ public class MainActivity extends BaseActivity {
                 findFragmentById(R.id.content_main);
         contentMainFragment.setOnListMovedToEndListener(new StoriesListHandler() {
             @Override
-            public void onEnd(String date) {
+            public void getBeforeNews(String date) {
                 newsService.getBeforeNews(date, handler);
-                Log.d(tag, "Get news: " + date);
+                // Log.d(tag, "Get news: " + date);
                 // commonUtil.promptMsg("Get news: " + date);
+            }
+
+            @Override
+            public void getDailyNews() {
+                newsService.getDailyNews(handler);
             }
 
             @Override
@@ -154,7 +158,7 @@ public class MainActivity extends BaseActivity {
                     for (Summary summary: beforeNews.getStories()) {
                         summary.setDate(beforeNews.getDate());
                     }
-                    contentMainFragment.addSummary(beforeNews.getStories());
+                    contentMainFragment.appendStories(beforeNews.getStories());
                     break;
                 case Constant.DOWNLOAD_THEME_LIST_SUCCESS:
                     ThemeList themeList = (ThemeList)((Object[])message.obj)[0];

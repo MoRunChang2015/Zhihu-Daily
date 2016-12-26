@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +12,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import java.util.List;
+
 import cn.zhihu.daily.zhihu_daily.R;
+import cn.zhihu.daily.zhihu_daily.adapter.TopStoriesAdapter;
+import cn.zhihu.daily.zhihu_daily.model.TopStory;
 
 /**
  * Created by tommy on 12/16/16.
@@ -22,6 +27,7 @@ public class ViewPagerWithIndicator extends RelativeLayout implements ViewPager.
     Context context;
 
     ViewPager m_viewPager;
+    TopStoriesAdapter pagerAdapter;
     LinearLayout m_indicatorLayout;
 
     int currentPage = 0;
@@ -45,30 +51,38 @@ public class ViewPagerWithIndicator extends RelativeLayout implements ViewPager.
         m_viewPager = (ViewPager)findViewById(R.id.top_story);
         m_indicatorLayout = (LinearLayout)findViewById(R.id.top_story_indicator);
         m_viewPager.addOnPageChangeListener(this);
+        pagerAdapter = new TopStoriesAdapter(context, m_viewPager);
+        m_viewPager.setAdapter(pagerAdapter);
     }
 
-    public void setAdapter(PagerAdapter adapter) {
+    public void setContent(List<TopStory> list) {
+        pagerAdapter.setContent(list);
+
         int indicatorNum = m_indicatorLayout.getChildCount();
         LayoutInflater inflater = LayoutInflater.from(context);
-        while (indicatorNum != adapter.getCount()) {
-            if (indicatorNum > adapter.getCount()) {
+        while (indicatorNum != pagerAdapter.getCount()) {
+            if (indicatorNum > pagerAdapter.getCount()) {
                 m_indicatorLayout.removeViewAt(indicatorNum - 1);
-            } else if (indicatorNum < adapter.getCount()) {
+            } else if (indicatorNum < pagerAdapter.getCount()) {
                 View indicator = inflater.inflate(R.layout.indicator, m_indicatorLayout, false);
                 m_indicatorLayout.addView(indicator);
             }
             indicatorNum = m_indicatorLayout.getChildCount();
         }
-        if (indicatorNum > currentPage) {
+        if (indicatorNum >= currentPage) {
             ((ImageView)m_indicatorLayout.getChildAt(currentPage)).setImageResource(R.drawable.indicator_normal);
         }
         currentPage = 0;
-        ((ImageView)m_indicatorLayout.getChildAt(0)).setImageResource(R.drawable.indicator_selected);
-        m_viewPager.setAdapter(adapter);
+        if (indicatorNum == 0) {
+            return;
+        }
+        ((ImageView)m_indicatorLayout.getChildAt(m_viewPager.getCurrentItem())).
+                setImageResource(R.drawable.indicator_selected);
+        currentPage = m_viewPager.getCurrentItem();
     }
 
-    public ViewGroup getPagesRoot() {
-        return m_viewPager;
+    public void setCurrentPage(int num) {
+        m_viewPager.setCurrentItem(num, true);
     }
 
     @Override
@@ -78,6 +92,7 @@ public class ViewPagerWithIndicator extends RelativeLayout implements ViewPager.
 
     @Override
     public void onPageSelected(int position) {
+
         ((ImageView)m_indicatorLayout.getChildAt(currentPage)).setImageResource(R.drawable.indicator_normal);
         currentPage = position;
         ((ImageView)m_indicatorLayout.getChildAt(currentPage)).setImageResource(R.drawable.indicator_selected);

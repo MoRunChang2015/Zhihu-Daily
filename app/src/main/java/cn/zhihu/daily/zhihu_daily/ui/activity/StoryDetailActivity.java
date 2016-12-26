@@ -131,7 +131,7 @@ public class StoryDetailActivity extends BaseActivity {
                         viewGroup.removeView(frameLayout);
                     }
                     setWebContent(detail);
-                    commonUtil.promptMsg("Download news Detail Success");
+                    // commonUtil.promptMsg("Download news Detail Success");
                     break;
                 default:
                     break;

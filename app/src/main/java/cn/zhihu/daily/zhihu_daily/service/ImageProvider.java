@@ -3,9 +3,7 @@ package cn.zhihu.daily.zhihu_daily.service;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Environment;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -23,9 +21,7 @@ import cn.zhihu.daily.zhihu_daily.util.NetworkUtil;
 public class ImageProvider {
     private String imagePath;
 
-    private Context context;
     public ImageProvider(Context context) {
-        this.context = context;
         imagePath = context.getFilesDir().getPath() + "/images/";
     }
     public void loadImage(String url,

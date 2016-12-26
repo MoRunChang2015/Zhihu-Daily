@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,8 +30,9 @@ import cn.zhihu.daily.zhihu_daily.ui.activity.StoryDetailActivity;
 public class TopStoriesAdapter extends PagerAdapter {
 
     private Context context;
+    private ViewPager viewGroup;
 
-    private List<TopStory> topStoryList;
+    private List<TopStory> topStoryList = new ArrayList<>();
 
     private List<View> containers = new ArrayList<>();
     private Queue<Integer> availableViews = new LinkedList<>();
@@ -37,6 +40,7 @@ public class TopStoriesAdapter extends PagerAdapter {
     private ImageProvider imageProvider;
 
     public TopStoriesAdapter(Context context, ViewGroup root) {
+        this.viewGroup = (ViewPager) root;
         imageProvider = new ImageProvider(context);
         this.context = context;
         LayoutInflater inflater = LayoutInflater.from(this.context);
@@ -54,6 +58,19 @@ public class TopStoriesAdapter extends PagerAdapter {
 
     public void setContent(List<TopStory> topStoryList) {
         this.topStoryList = topStoryList;
+//        removeAllViews();
+//        instantiateItem(viewGroup, 0);
+//        instantiateItem(viewGroup, 1);
+        notifyDataSetChanged();
+//        viewGroup.setCurrentItem(0);
+    }
+
+    private void removeAllViews() {
+        for (int i = 0; i < viewGroup.getChildCount(); i++) {
+            View view = viewGroup.getChildAt(i);
+            TopStoryViewHolder viewHolder = (TopStoryViewHolder) view.getTag();
+            destroyItem(viewGroup, viewHolder.position, view);
+        }
     }
 
 
@@ -64,6 +81,7 @@ public class TopStoriesAdapter extends PagerAdapter {
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
+        Log.d("ViewPager", "Instantiate " + position + " available " + availableViews);
         final TopStory topStory = topStoryList.get(position);
 
         int tobeUsed = availableViews.poll();
