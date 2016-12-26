@@ -58,21 +58,8 @@ public class TopStoriesAdapter extends PagerAdapter {
 
     public void setContent(List<TopStory> topStoryList) {
         this.topStoryList = topStoryList;
-//        removeAllViews();
-//        instantiateItem(viewGroup, 0);
-//        instantiateItem(viewGroup, 1);
         notifyDataSetChanged();
-//        viewGroup.setCurrentItem(0);
     }
-
-    private void removeAllViews() {
-        for (int i = 0; i < viewGroup.getChildCount(); i++) {
-            View view = viewGroup.getChildAt(i);
-            TopStoryViewHolder viewHolder = (TopStoryViewHolder) view.getTag();
-            destroyItem(viewGroup, viewHolder.position, view);
-        }
-    }
-
 
     @Override
     public int getCount() {
@@ -111,6 +98,7 @@ public class TopStoriesAdapter extends PagerAdapter {
     public void destroyItem(ViewGroup container, int position, Object object) {
         container.removeView((View) object);
         availableViews.add(((TopStoryViewHolder)((View) object).getTag()).viewID);
+        ((TopStoryViewHolder)((View)object).getTag()).imageView.setImageResource(R.color.mainActivityBackground);
     }
 
     @Override
