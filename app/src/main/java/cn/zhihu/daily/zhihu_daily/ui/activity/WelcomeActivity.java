@@ -1,11 +1,21 @@
 package cn.zhihu.daily.zhihu_daily.ui.activity;
 
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.Message;
+import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
+import android.widget.EditText;
 import android.widget.ImageView;
 
 import java.io.File;
@@ -13,6 +23,11 @@ import java.io.File;
 import butterknife.BindView;
 import cn.zhihu.daily.zhihu_daily.R;
 import cn.zhihu.daily.zhihu_daily.base.BaseActivity;
+import cn.zhihu.daily.zhihu_daily.global.Constant;
+import cn.zhihu.daily.zhihu_daily.service.NewsService;
+
+import static android.R.id.content;
+import static android.R.id.message;
 
 public class WelcomeActivity extends BaseActivity {
 
@@ -20,6 +35,23 @@ public class WelcomeActivity extends BaseActivity {
     ImageView background;
     @BindView(R.id.logo)
     ImageView logo;
+
+
+    private NewsService newsService;
+
+    private ServiceConnection sc =  new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            newsService = ((NewsService.MyBinder)iBinder).getService();
+            newsService.updateWelcomeImage();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            newsService = null;
+        }
+    };
+
 
     @Override
     protected int setLayout() {
@@ -30,8 +62,27 @@ public class WelcomeActivity extends BaseActivity {
     protected void initViews(Bundle savedInstanceState) {
         File file = new File(getFilesDir().getPath() + "/images/");
         file.mkdir();
+        Intent intent = new Intent(this, NewsService.class);
+        bindService(intent, sc, BIND_AUTO_CREATE);
+        SharedPreferences sharedPreferences = getSharedPreferences("WelcomeImage", MODE_PRIVATE);
+        String imagePath = sharedPreferences.getString("path", null);
+        if (imagePath != null) {
+            Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
+            background.setImageBitmap(bitmap);
+        }
         startAnimation(background, logo);
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        try {
+            unbindService(sc);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private void startAnimation(ImageView background, ImageView logo) {
         final ScaleAnimation bgScaleAnim = new ScaleAnimation(1.0f, 1.3f, 1.0f, 1.3f

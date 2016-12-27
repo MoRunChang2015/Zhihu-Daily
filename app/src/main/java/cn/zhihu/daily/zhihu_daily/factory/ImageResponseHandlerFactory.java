@@ -24,7 +24,7 @@ public class ImageResponseHandlerFactory {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] binaryData) {
                 Bitmap imageBitmap = BitmapFactory.decodeByteArray(binaryData, 0, binaryData.length);
-                if (imageBitmap.getHeight() > 600) {
+                if (imageBitmap.getHeight() > 600 && imageBitmap.getHeight() < 1500) {
                     imageBitmap = Bitmap.createBitmap(imageBitmap, 0, 0, imageBitmap.getWidth(), 550);
                     Log.i("Get Image", "");
                 }

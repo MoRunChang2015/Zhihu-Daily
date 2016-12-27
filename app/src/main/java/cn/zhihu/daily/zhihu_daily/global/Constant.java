@@ -48,4 +48,6 @@ public interface Constant {
 
     int ITEM_DATE_TYPE = 7;
 
+    int DOWNLOAD_WELCOME_IMAGE_SUCCESS = 8;
+
 }

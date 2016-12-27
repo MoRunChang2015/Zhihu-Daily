@@ -2,6 +2,8 @@ package cn.zhihu.daily.zhihu_daily.service;
 
 import android.app.Service;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
@@ -13,9 +15,14 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.Calendar;
 
+import cn.zhihu.daily.zhihu_daily.Interface.BitmapContainer;
+import cn.zhihu.daily.zhihu_daily.Interface.OnImageDownloaded;
 import cn.zhihu.daily.zhihu_daily.database.NewsDbHelper;
+import cn.zhihu.daily.zhihu_daily.factory.ImageResponseHandlerFactory;
 import cn.zhihu.daily.zhihu_daily.global.Constant;
 import cn.zhihu.daily.zhihu_daily.factory.JsonResponseHandlerFactory;
 import cn.zhihu.daily.zhihu_daily.model.DailyNews;
@@ -84,32 +91,44 @@ public class NewsService extends Service {
     }
 
 
-    public void getStartUpImage(final Handler handler) {
+    public void updateWelcomeImage() {
         if (!NetworkUtil.isNetworkAvailable(getApplicationContext())) {
-            Message message = new Message();
-            message.what = Constant.NO_AVAILABLE_NETWORK;
-            handler.sendMessage(message);
             return;
         }
         NetworkUtil.getStartImageUrl(new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
-                    String url = response.getString("img");
-                    //TODO: Download Image
-                } catch (JSONException e) {
+                    final String url = response.getString("img");
+                    final SharedPreferences sharedPreferences = getSharedPreferences("WelcomeImage", MODE_PRIVATE);
+                    String oldUrl = sharedPreferences.getString("url", null);
+                    if (oldUrl == null || !oldUrl.equals(url)) {
+                        final SharedPreferences.Editor editor = sharedPreferences.edit();
+                        final String imagePath = getFilesDir().getPath() + "/images/";
+                        final String md5 = CommonUtil.getMD5(url);
+                        NetworkUtil.getImage(url,
+                                ImageResponseHandlerFactory.createHandler(new OnImageDownloaded() {
+                                    @Override
+                                    public void Do(Bitmap bitmap) {
+                                        try (FileOutputStream out = new FileOutputStream(new File(imagePath, md5))) {
+                                            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+                                            editor.putString("url", url);
+                                            editor.putString("path", imagePath + md5);
+                                            editor.apply();
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }));
+                    }
+                } catch (Exception e) {
                     e.printStackTrace();
-                    Message msg = new Message();
-                    msg.what = Constant.NETWORK_ERROR;
-                    handler.sendMessage(msg);
                 }
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String response, Throwable e) {
-                Message msg = new Message();
-                msg.what = Constant.NETWORK_ERROR;
-                handler.sendMessage(msg);
+                // do nothing
             }
         });
     }
