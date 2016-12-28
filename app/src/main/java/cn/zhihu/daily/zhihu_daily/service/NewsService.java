@@ -99,7 +99,7 @@ public class NewsService extends Service {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
-                    final String url = response.getString("img");
+                    final String url = response.getString("img").replace("https", "http");
                     final SharedPreferences sharedPreferences = getSharedPreferences("WelcomeImage", MODE_PRIVATE);
                     String oldUrl = sharedPreferences.getString("url", null);
                     if (oldUrl == null || !oldUrl.equals(url)) {

@@ -16,8 +16,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         initViews(savedInstanceState);
     }
 
-    protected void initVariables() {
-    }
+    protected void initVariables() {}
 
     protected abstract int setLayout();
 
