@@ -1,13 +1,10 @@
 package cn.zhihu.daily.zhihu_daily.ui.view;
 
 import android.content.Context;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -76,9 +73,8 @@ public class ViewPagerWithIndicator extends RelativeLayout implements ViewPager.
         if (indicatorNum == 0) {
             return;
         }
-        ((ImageView)m_indicatorLayout.getChildAt(m_viewPager.getCurrentItem())).
+        ((ImageView)m_indicatorLayout.getChildAt(currentPage)).
                 setImageResource(R.drawable.indicator_selected);
-        currentPage = m_viewPager.getCurrentItem();
     }
 
     public void setCurrentPage(int num) {
