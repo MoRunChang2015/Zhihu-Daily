@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.LinkedList;
 import java.util.List;
 
 import cn.zhihu.daily.zhihu_daily.Interface.BitmapContainer;

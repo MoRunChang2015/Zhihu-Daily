@@ -2,15 +2,12 @@ package cn.zhihu.daily.zhihu_daily.factory;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.support.annotation.Nullable;
 import android.util.Log;
-import android.widget.ImageView;
 
 import com.loopj.android.http.BinaryHttpResponseHandler;
 
 import java.util.Arrays;
 
-import cn.zhihu.daily.zhihu_daily.Interface.BitmapContainer;
 import cn.zhihu.daily.zhihu_daily.Interface.OnImageDownloaded;
 import cz.msebera.android.httpclient.Header;
 

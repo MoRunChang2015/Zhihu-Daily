@@ -1,6 +1,7 @@
 package cn.zhihu.daily.zhihu_daily.ui.activity;
 
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.view.GestureDetector;
@@ -46,8 +47,8 @@ public class MainActivity extends BaseActivity {
     ContentMainFragment contentMainFragment;
 
 
-    @BindView(R.id.fab)
-    FloatingActionButton fab;
+    @BindView(R.id.coordinatorLayout)
+    CoordinatorLayout coordinatorLayout;
 
     @BindView(R.id.drawer_layout)
     DrawerLayout drawer;
@@ -62,16 +63,9 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void initViews(Bundle savedInstanceState) {
-        commonUtil = new CommonUtil(fab);
+        commonUtil = new CommonUtil(coordinatorLayout);
 
         setSupportActionBar(toolbar);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
