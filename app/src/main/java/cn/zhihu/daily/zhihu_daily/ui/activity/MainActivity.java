@@ -1,5 +1,6 @@
 package cn.zhihu.daily.zhihu_daily.ui.activity;
 
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -21,10 +22,15 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 
+import java.util.ArrayList;
+import java.util.Random;
+
 import butterknife.BindView;
+import cn.zhihu.daily.zhihu_daily.Interface.SensorCallback;
 import cn.zhihu.daily.zhihu_daily.Interface.StoriesListHandler;
 import cn.zhihu.daily.zhihu_daily.R;
 import cn.zhihu.daily.zhihu_daily.base.BaseActivity;
+import cn.zhihu.daily.zhihu_daily.database.NewsDbHelper;
 import cn.zhihu.daily.zhihu_daily.global.Config;
 import cn.zhihu.daily.zhihu_daily.global.Constant;
 import cn.zhihu.daily.zhihu_daily.model.DailyNews;
@@ -37,12 +43,16 @@ import cn.zhihu.daily.zhihu_daily.ui.fragment.ContentMainFragment;
 import cn.zhihu.daily.zhihu_daily.ui.fragment.ThemeListFragment;
 import cn.zhihu.daily.zhihu_daily.util.CommonUtil;
 import cn.zhihu.daily.zhihu_daily.util.NetworkUtil;
+import cn.zhihu.daily.zhihu_daily.util.SensorUtil;
 
 public class MainActivity extends BaseActivity {
     final String tag = "MainActivity";
 
     CommonUtil commonUtil;
     private NewsService newsService;
+    private SensorUtil sensorUtil;
+    private NewsDbHelper newsDbHelper;
+    private ArrayList<Integer> list = null;
 
     ContentMainFragment contentMainFragment;
 
@@ -63,8 +73,10 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void initViews(Bundle savedInstanceState) {
+        newsDbHelper = new NewsDbHelper(this);
         commonUtil = new CommonUtil(coordinatorLayout);
-
+        SensorManager sensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
+        sensorUtil = new SensorUtil(sensorManager, sensorCallback);
         setSupportActionBar(toolbar);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -114,6 +126,31 @@ public class MainActivity extends BaseActivity {
         });
     }
 
+    public SensorCallback sensorCallback = new SensorCallback() {
+        @Override
+        public void onShake() {
+            int len = list.size();
+            Random random = new Random();
+            boolean flag = false;
+            int id = 0;
+            while (len != 0) {
+                len--;
+                id = list.get(random.nextInt(list.size()));
+                if (!newsDbHelper.isRead(id)) {
+                    flag = true;
+                    break;
+                }
+            }
+            if (flag && id != 0) {
+                Intent intent = new Intent(MainActivity.this, StoryDetailActivity.class);
+                intent.putExtra("Detail", id);
+                startActivity(intent);
+            } else {
+                commonUtil.promptMsg("今天没有新的大新闻啦！");
+            }
+        }
+    };
+
     private ServiceConnection sc =  new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
@@ -137,10 +174,13 @@ public class MainActivity extends BaseActivity {
                 case Constant.DOWNLOAD_LATEST_NEWS_SUCCESS:
                     DailyNews dailyNews = (DailyNews)message.obj;
                     dailyNews.getStories().add(0, new Summary());
+                    list = new ArrayList<>();
                     for (Summary summary: dailyNews.getStories()) {
                         summary.setDate(dailyNews.getDate());
+                        list.add(summary.getId());
                     }
                     contentMainFragment.setDailyNews(dailyNews);
+                    sensorUtil.setListener();
                     break;
                 case Constant.DOWNLOAD_BEFORE_NEWS_SUCCESS:
                     DailyNews beforeNews = (DailyNews)message.obj;
@@ -214,6 +254,18 @@ public class MainActivity extends BaseActivity {
     };
 
     @Override
+    public void onPause() {
+        super.onPause();
+        sensorUtil.rmListener();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        sensorUtil.setListener();
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         try {
@@ -221,6 +273,7 @@ public class MainActivity extends BaseActivity {
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
         }
+        sensorUtil.rmListener();
     }
 
     @Override

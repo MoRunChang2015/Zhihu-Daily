@@ -112,6 +112,16 @@ public class NewsDbHelper {
         return result;
     }
 
+    public boolean isRead(int id) {
+        String SQLQuery = "select id from news_detail where id = " + Integer.toString(id);
+        try (Cursor result = readableDB.rawQuery(SQLQuery, null)) {
+            if (result.moveToFirst()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private class DatabaseHandler extends SQLiteOpenHelper {
 
         DatabaseHandler(Context context) {
