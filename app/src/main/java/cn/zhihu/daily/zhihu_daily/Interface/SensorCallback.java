@@ -5,5 +5,5 @@ package cn.zhihu.daily.zhihu_daily.Interface;
  */
 
 public interface SensorCallback {
-    public void onShake();
+    void onShake();
 }
