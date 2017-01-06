@@ -61,4 +61,7 @@ Model类的设计是根据知乎API返回的JSON格式设计的，Model有以下
 #### 5. 无图模式
 通过限制图片加载以及在WebView中限制图片下载，将webView的`setLoadsImagesAutomatically`和`setBlockNetworkImage`都配置成`false`。
 
+#### 6. 热门新闻ViewPager+Indicator实现
+
+
 

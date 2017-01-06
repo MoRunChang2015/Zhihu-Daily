@@ -16,6 +16,6 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="src_code_address"><a href="https://github.com/MoRunChang2015/Zhihu-Daily">App 源代码(github)</a></string>
-    <string name="api_address"><a href="https://github.com/izzyleung/ZhihuDailyPurify/wiki/%E7%9F%A5%E4%B9%8E%E6%97%A5%E6%8A%A5-API-%E5%88%86%E6%9E%90">API 来源(github)</a></string>
+    <string name="src_code_address">App 源代码(github)\nMoRunChang2015/Zhihu-Daily</string>
+    <string name="api_address">API 来源(github)\nizzyleung/ZhihuDailyPurify</string>
 </resources>
