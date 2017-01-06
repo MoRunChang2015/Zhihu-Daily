@@ -44,7 +44,7 @@ public class TopStoriesAdapter extends PagerAdapter {
         imageProvider = new ImageProvider(context);
         this.context = context;
         LayoutInflater inflater = LayoutInflater.from(this.context);
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 5; i++) {
             View view = inflater.inflate(R.layout.top_story_item, root, false);
             TopStoryViewHolder viewHolder = new TopStoryViewHolder();
             viewHolder.imageView = (ImageView) view.findViewById(R.id.image);
@@ -57,6 +57,9 @@ public class TopStoriesAdapter extends PagerAdapter {
     }
 
     public void setContent(List<TopStory> topStoryList) {
+        this.topStoryList.clear();
+        notifyDataSetChanged();
+
         this.topStoryList = topStoryList;
         notifyDataSetChanged();
     }
@@ -96,6 +99,7 @@ public class TopStoriesAdapter extends PagerAdapter {
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
+        Log.d("ViewPager", "Destroy " + position + " available " + availableViews);
         container.removeView((View) object);
         availableViews.add(((TopStoryViewHolder)((View) object).getTag()).viewID);
         ((TopStoryViewHolder)((View)object).getTag()).imageView.setImageResource(R.color.mainActivityBackground);

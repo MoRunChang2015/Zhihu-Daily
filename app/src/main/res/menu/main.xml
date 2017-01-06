@@ -7,7 +7,7 @@
         android:title="@string/action_no_image"
         app:showAsAction="never" />
     <item
-        android:id="@+id/action_cache"
+        android:id="@+id/about"
         android:orderInCategory="100"
-        android:title="@string/action_cache" />
+        android:title="@string/about" />
 </menu>

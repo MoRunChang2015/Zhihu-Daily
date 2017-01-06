@@ -5,7 +5,9 @@ import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.view.GestureDetector;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.support.v4.view.GravityCompat;
@@ -55,7 +57,6 @@ public class MainActivity extends BaseActivity {
     private ArrayList<Integer> list = null;
 
     ContentMainFragment contentMainFragment;
-
 
     @BindView(R.id.coordinatorLayout)
     CoordinatorLayout coordinatorLayout;
@@ -311,7 +312,10 @@ public class MainActivity extends BaseActivity {
             Config.downLoadImage = !Config.downLoadImage;
             return true;
         }
-        if (id == R.id.action_cache) {
+        if (id == R.id.about) {
+            AlertDialog.Builder aboutDialog = new AlertDialog.Builder(this);
+            aboutDialog.setView(R.layout.dialog_about)
+                    .show();
             return true;
         }
 

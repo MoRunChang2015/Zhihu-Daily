@@ -66,7 +66,7 @@ public class ViewPagerWithIndicator extends RelativeLayout implements ViewPager.
             }
             indicatorNum = m_indicatorLayout.getChildCount();
         }
-        if (indicatorNum >= currentPage) {
+        if (indicatorNum > currentPage) {
             ((ImageView)m_indicatorLayout.getChildAt(currentPage)).setImageResource(R.drawable.indicator_normal);
         }
         currentPage = 0;
@@ -75,6 +75,7 @@ public class ViewPagerWithIndicator extends RelativeLayout implements ViewPager.
         }
         ((ImageView)m_indicatorLayout.getChildAt(currentPage)).
                 setImageResource(R.drawable.indicator_selected);
+        m_viewPager.setCurrentItem(0);
     }
 
     public void setCurrentPage(int num) {

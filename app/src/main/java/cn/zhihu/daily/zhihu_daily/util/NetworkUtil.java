@@ -19,7 +19,7 @@ import cn.zhihu.daily.zhihu_daily.global.Constant;
 
 public class NetworkUtil {
     static final String tag = "NetworkUtil";
-    private static AsyncHttpClient httpClient = new AsyncHttpClient();
+    private static AsyncHttpClient httpClient = new AsyncHttpClient(true, 80, 443);
 
     private static void get(String url, TextHttpResponseHandler responseHandler) {
         httpClient.get(url, responseHandler);

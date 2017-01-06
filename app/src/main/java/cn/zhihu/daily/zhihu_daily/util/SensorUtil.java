@@ -43,7 +43,7 @@ public class SensorUtil {
                     if (Math.abs(event.values[0]) > maxValue || Math.abs(event.values[1]) > maxValue
                             || Math.abs(event.values[2]) > maxValue) {
                         count++;
-                        if (count > 5) {
+                        if (count > 10) {
                             sensorCallback.onShake();
                             count = 0;
                         }
