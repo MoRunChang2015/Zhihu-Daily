@@ -18,7 +18,7 @@ Release 1.0: [download](https://github.com/MoRunChang2015/Zhihu-Daily/blob/maste
 
 #### 主界面和侧边栏
 
-![MainActivity](https://github.com/MoRunChang2015/Zhihu-Daily/blob/master/doc/images/MainActivity.png)![beforeNews](https://github.com/MoRunChang2015/Zhihu-Daily/blob/master/doc/images/BeforeNews.png)![ThemeList](https://github.com/MoRunChang2015/Zhihu-Daily/blob/master/doc/images/ThemeList.png)![refresh](https://github.com/MoRunChang2015/Zhihu-Daily/blob/master/doc/images/refresh.png)
+![MainActivity](https://github.com/MoRunChang2015/Zhihu-Daily/blob/master/doc/images/MainActivity.png)![beforeNews](https://github.com/MoRunChang2015/Zhihu-Daily/blob/master/doc/images/BeforeNews.png)![refresh](https://github.com/MoRunChang2015/Zhihu-Daily/blob/master/doc/images/refresh.png)![ThemeList](https://github.com/MoRunChang2015/Zhihu-Daily/blob/master/doc/images/ThemeList.png)
 
 
 #### 新闻页
