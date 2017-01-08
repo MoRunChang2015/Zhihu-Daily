@@ -10,5 +10,32 @@ Release 1.0: [download](https://github.com/MoRunChang2015/Zhihu-Daily/blob/maste
 [实现文档](https://github.com/MoRunChang2015/Zhihu-Daily/blob/master/doc/implementation.md)
 
 
+### 运行截图
+
+#### 欢迎页
+
+![welcomePage](https://github.com/MoRunChang2015/Zhihu-Daily/blob/master/doc/images/welcomePage.png)
+
+#### 主界面和侧边栏
+
+![MainActivity](https://github.com/MoRunChang2015/Zhihu-Daily/blob/master/doc/images/MainActivity.png)![beforeNews](https://github.com/MoRunChang2015/Zhihu-Daily/blob/master/doc/images/BeforeNews.png)![ThemeList](https://github.com/MoRunChang2015/Zhihu-Daily/blob/master/doc/images/ThemeList.png)![refresh](https://github.com/MoRunChang2015/Zhihu-Daily/blob/master/doc/images/refresh.png)
+
+
+#### 新闻页
+
+![NewsDetail](https://github.com/MoRunChang2015/Zhihu-Daily/blob/master/doc/images/NewsDetail.png)![NewsDetail2](https://github.com/MoRunChang2015/Zhihu-Daily/blob/master/doc/images/NewsDetail2.png)
+
+
+#### 主题新闻
+
+
+![ThemeNews](https://github.com/MoRunChang2015/Zhihu-Daily/blob/master/doc/images/ThemeNews.png)![ThemeNews2](https://github.com/MoRunChang2015/Zhihu-Daily/blob/master/doc/images/ThemeNews2.png)
+
+
+#### 无图模式
+![NoPicture](https://github.com/MoRunChang2015/Zhihu-Daily/blob/master/doc/images/NoPictureMode.png)![NoPicture](https://github.com/MoRunChang2015/Zhihu-Daily/blob/master/doc/images/NoPictureMode2.png)
+
+
+
 ### API
 [知乎日报API](https://github.com/MoRunChang2015/Zhihu-Daily/blob/master/ZhihuDaily-api.md)

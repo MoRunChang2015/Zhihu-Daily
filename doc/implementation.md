@@ -61,7 +61,10 @@ Model类的设计是根据知乎API返回的JSON格式设计的，Model有以下
 #### 5. 无图模式
 通过限制图片加载以及在WebView中限制图片下载，将webView的`setLoadsImagesAutomatically`和`setBlockNetworkImage`都配置成`false`。
 
-#### 6. 热门新闻ViewPager+Indicator实现
+#### 6. 热门新闻中ViewPager+Indicator实现
+自定义了一个ViewPagerWithIndicator的View， 内含一个ViewPager和一个LinearLayout，用于存放Indicator。  
+核心实现方法为：重写`onPageSelected`函数，动态改变indicator的颜色。  
+这个View封装了ViewPager和Adapter，只需要调用`setContent`方法即可完成配置。
 
-
-
+#### 7. 主题切换
+新闻列表和主题列表分别放在不同的fragment里，当用户选中主题列表的一个主题后，便会调用NewsService获取对应新闻列表，并更换新闻列表中RecycleView的Adapter。
